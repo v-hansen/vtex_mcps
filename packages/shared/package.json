@@ -1,0 +1,30 @@
+{
+  "name": "@vtex-mcp/shared",
+  "version": "1.0.0",
+  "description": "Shared utilities for VTEX MCP servers — HTTP client, auth, validation, error handling, and server factory",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest --run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "axios": "^1.7.9",
+    "express": "^5.2.1",
+    "zod": "^3.24.2",
+    "zod-to-json-schema": "^3.25.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^22.10.5",
+    "fast-check": "^4.0.0",
+    "vitest": "^3.0.4"
+  },
+  "license": "MIT"
+}

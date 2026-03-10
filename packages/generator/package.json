@@ -1,0 +1,30 @@
+{
+  "name": "@vtex-mcp/generator",
+  "version": "1.0.0",
+  "description": "Code generator that produces MCP server packages from VTEX OpenAPI specifications",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "vtex-mcp-generator": "dist/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest --run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@apidevtools/swagger-parser": "^10.1.1",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "fast-check": "^4.0.0",
+    "openapi-types": "^12.1.3",
+    "vitest": "^3.0.4"
+  },
+  "license": "MIT"
+}
