@@ -1,0 +1,297 @@
+# VTEX MCP Servers - Docker Compose for Local Development
+#
+# Before running, create a .env file with your VTEX credentials:
+#   cp .env.example .env
+#   # Edit .env with your actual credentials
+#
+# Start all servers:   docker compose up
+# Start one server:    docker compose up catalog-api
+# Rebuild all:         docker compose up --build
+
+services:
+  catalog-api:
+    build: ./servers/catalog-api
+    command: ["--transport", "http", "--port", "3000"]
+    ports:
+      - "3001:3000"
+    env_file: .env
+
+  orders-api:
+    build: ./servers/orders-api
+    command: ["--transport", "http", "--port", "3000"]
+    ports:
+      - "3002:3000"
+    env_file: .env
+
+  checkout-api:
+    build: ./servers/checkout-api
+    command: ["--transport", "http", "--port", "3000"]
+    ports:
+      - "3003:3000"
+    env_file: .env
+
+  payments-api:
+    build: ./servers/payments-api
+    command: ["--transport", "http", "--port", "3000"]
+    ports:
+      - "3004:3000"
+    env_file: .env
+
+  payments-gateway-api:
+    build: ./servers/payments-gateway-api
+    command: ["--transport", "http", "--port", "3000"]
+    ports:
+      - "3005:3000"
+    env_file: .env
+
+  logistics-api:
+    build: ./servers/logistics-api
+    command: ["--transport", "http", "--port", "3000"]
+    ports:
+      - "3006:3000"
+    env_file: .env
+
+  inventory-api:
+    build: ./servers/inventory-api
+    command: ["--transport", "http", "--port", "3000"]
+    ports:
+      - "3007:3000"
+    env_file: .env
+
+  warehouse-api:
+    build: ./servers/warehouse-api
+    command: ["--transport", "http", "--port", "3000"]
+    ports:
+      - "3008:3000"
+    env_file: .env
+
+  pricing-api:
+    build: ./servers/pricing-api
+    command: ["--transport", "http", "--port", "3000"]
+    ports:
+      - "3009:3000"
+    env_file: .env
+
+  promotions-and-taxes-api:
+    build: ./servers/promotions-and-taxes-api
+    command: ["--transport", "http", "--port", "3000"]
+    ports:
+      - "3010:3000"
+    env_file: .env
+
+  search-api:
+    build: ./servers/search-api
+    command: ["--transport", "http", "--port", "3000"]
+    ports:
+      - "3011:3000"
+    env_file: .env
+
+  suggestions-api:
+    build: ./servers/suggestions-api
+    command: ["--transport", "http", "--port", "3000"]
+    ports:
+      - "3012:3000"
+    env_file: .env
+
+  customer-credit-api:
+    build: ./servers/customer-credit-api
+    command: ["--transport", "http", "--port", "3000"]
+    ports:
+      - "3013:3000"
+    env_file: .env
+
+  subscriptions-api:
+    build: ./servers/subscriptions-api
+    command: ["--transport", "http", "--port", "3000"]
+    ports:
+      - "3014:3000"
+    env_file: .env
+
+  marketplace-api:
+    build: ./servers/marketplace-api
+    command: ["--transport", "http", "--port", "3000"]
+    ports:
+      - "3015:3000"
+    env_file: .env
+
+  master-data-api-v2:
+    build: ./servers/master-data-api-v2
+    command: ["--transport", "http", "--port", "3000"]
+    ports:
+      - "3016:3000"
+    env_file: .env
+
+  master-data-api-v10:
+    build: ./servers/master-data-api-v10
+    command: ["--transport", "http", "--port", "3000"]
+    ports:
+      - "3017:3000"
+    env_file: .env
+
+  cms-legacy-portal-api:
+    build: ./servers/cms-legacy-portal-api
+    command: ["--transport", "http", "--port", "3000"]
+    ports:
+      - "3018:3000"
+    env_file: .env
+
+  vtex-id-api:
+    build: ./servers/vtex-id-api
+    command: ["--transport", "http", "--port", "3000"]
+    ports:
+      - "3019:3000"
+    env_file: .env
+
+  license-manager-api:
+    build: ./servers/license-manager-api
+    command: ["--transport", "http", "--port", "3000"]
+    ports:
+      - "3020:3000"
+    env_file: .env
+
+  session-manager-api:
+    build: ./servers/session-manager-api
+    command: ["--transport", "http", "--port", "3000"]
+    ports:
+      - "3021:3000"
+    env_file: .env
+
+  antifraud-provider-api:
+    build: ./servers/antifraud-provider-api
+    command: ["--transport", "http", "--port", "3000"]
+    ports:
+      - "3022:3000"
+    env_file: .env
+
+  gift-card-api:
+    build: ./servers/gift-card-api
+    command: ["--transport", "http", "--port", "3000"]
+    ports:
+      - "3023:3000"
+    env_file: .env
+
+  gift-card-hub-api:
+    build: ./servers/gift-card-hub-api
+    command: ["--transport", "http", "--port", "3000"]
+    ports:
+      - "3024:3000"
+    env_file: .env
+
+  gift-card-provider-protocol:
+    build: ./servers/gift-card-provider-protocol
+    command: ["--transport", "http", "--port", "3000"]
+    ports:
+      - "3025:3000"
+    env_file: .env
+
+  payment-provider-protocol:
+    build: ./servers/payment-provider-protocol
+    command: ["--transport", "http", "--port", "3000"]
+    ports:
+      - "3026:3000"
+    env_file: .env
+
+  rates-and-benefits-api:
+    build: ./servers/rates-and-benefits-api
+    command: ["--transport", "http", "--port", "3000"]
+    ports:
+      - "3027:3000"
+    env_file: .env
+
+  sku-bindings-api:
+    build: ./servers/sku-bindings-api
+    command: ["--transport", "http", "--port", "3000"]
+    ports:
+      - "3028:3000"
+    env_file: .env
+
+  specification-api:
+    build: ./servers/specification-api
+    command: ["--transport", "http", "--port", "3000"]
+    ports:
+      - "3029:3000"
+    env_file: .env
+
+  brand-api:
+    build: ./servers/brand-api
+    command: ["--transport", "http", "--port", "3000"]
+    ports:
+      - "3030:3000"
+    env_file: .env
+
+  category-api:
+    build: ./servers/category-api
+    command: ["--transport", "http", "--port", "3000"]
+    ports:
+      - "3031:3000"
+    env_file: .env
+
+  collection-beta-api:
+    build: ./servers/collection-beta-api
+    command: ["--transport", "http", "--port", "3000"]
+    ports:
+      - "3032:3000"
+    env_file: .env
+
+  headless-cms-api:
+    build: ./servers/headless-cms-api
+    command: ["--transport", "http", "--port", "3000"]
+    ports:
+      - "3033:3000"
+    env_file: .env
+
+  vtex-do-api:
+    build: ./servers/vtex-do-api
+    command: ["--transport", "http", "--port", "3000"]
+    ports:
+      - "3034:3000"
+    env_file: .env
+
+  policies-system-api:
+    build: ./servers/policies-system-api
+    command: ["--transport", "http", "--port", "3000"]
+    ports:
+      - "3035:3000"
+    env_file: .env
+
+  reviews-and-ratings-api:
+    build: ./servers/reviews-and-ratings-api
+    command: ["--transport", "http", "--port", "3000"]
+    ports:
+      - "3036:3000"
+    env_file: .env
+
+  message-center-api:
+    build: ./servers/message-center-api
+    command: ["--transport", "http", "--port", "3000"]
+    ports:
+      - "3037:3000"
+    env_file: .env
+
+  tracking-api:
+    build: ./servers/tracking-api
+    command: ["--transport", "http", "--port", "3000"]
+    ports:
+      - "3038:3000"
+    env_file: .env
+
+  pickup-points-api:
+    build: ./servers/pickup-points-api
+    command: ["--transport", "http", "--port", "3000"]
+    ports:
+      - "3039:3000"
+    env_file: .env
+
+  shipping-network-api:
+    build: ./servers/shipping-network-api
+    command: ["--transport", "http", "--port", "3000"]
+    ports:
+      - "3040:3000"
+    env_file: .env
+
+  intelligent-search-events-api:
+    build: ./servers/intelligent-search-events-api
+    command: ["--transport", "http", "--port", "3000"]
+    ports:
+      - "3041:3000"
+    env_file: .env
