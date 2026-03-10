@@ -1,0 +1,29 @@
+{
+  "name": "@vtex-mcp/inventory-api",
+  "version": "1.0.0",
+  "description": "MCP server for VTEX Inventory Api",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "vtex-mcp-inventory-api": "dist/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/cli.js",
+    "start:http": "node dist/cli.js --transport http"
+  },
+  "dependencies": {
+    "@vtex-mcp/shared": "workspace:*",
+    "axios": "^1.7.9",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "typescript": "^5.7.3"
+  },
+  "license": "MIT"
+}
