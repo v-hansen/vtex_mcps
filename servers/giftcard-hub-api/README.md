@@ -19,13 +19,13 @@ MCP server for the VTEX Gift Card Hub Api, providing AI assistants access to VTE
 ### Running via npx
 
 ```bash
-npx @vtex-mcp/gift-card-hub-api
+npx @vtex-mcp/giftcard-hub-api
 ```
 
 ### Running with HTTP transport
 
 ```bash
-npx @vtex-mcp/gift-card-hub-api --transport http --port 3000
+npx @vtex-mcp/giftcard-hub-api --transport http --port 3000
 ```
 
 ### MCP Client Configuration (Claude Desktop)
@@ -33,9 +33,9 @@ npx @vtex-mcp/gift-card-hub-api --transport http --port 3000
 ```json
 {
   "mcpServers": {
-    "gift-card-hub-api": {
+    "giftcard-hub-api": {
       "command": "npx",
-      "args": ["@vtex-mcp/gift-card-hub-api"],
+      "args": ["@vtex-mcp/giftcard-hub-api"],
       "env": {
         "VTEX_ACCOUNT_NAME": "your-account",
         "VTEX_APP_KEY": "your-app-key",
