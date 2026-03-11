@@ -215,9 +215,9 @@ npx @vtex-mcp/orders-api --transport http --port 8080
 | CMS (Legacy) | `@vtex-mcp/cms-legacy-portal-api` | Legacy CMS portal |
 | Collection (Beta) | `@vtex-mcp/collection-beta-api` | Product collections |
 | Customer Credit | `@vtex-mcp/customer-credit-api` | Customer credit management |
-| Gift Card | `@vtex-mcp/gift-card-api` | Gift card operations |
-| Gift Card Hub | `@vtex-mcp/gift-card-hub-api` | Gift card hub integration |
-| Gift Card Provider | `@vtex-mcp/gift-card-provider-protocol` | Gift card provider protocol |
+| Gift Card | `@vtex-mcp/giftcard-api` | Gift card operations |
+| Gift Card Hub | `@vtex-mcp/giftcard-hub-api` | Gift card hub integration |
+| Gift Card Provider | `@vtex-mcp/giftcard-provider-protocol` | Gift card provider protocol |
 | Headless CMS | `@vtex-mcp/headless-cms-api` | Headless CMS content |
 | Intelligent Search Events | `@vtex-mcp/intelligent-search-events-api` | Search analytics |
 | Inventory | `@vtex-mcp/inventory-api` | Inventory management |
