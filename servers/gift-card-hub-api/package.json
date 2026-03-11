@@ -1,12 +1,12 @@
 {
-  "name": "@vtex-mcp/gift-card-hub-api",
+  "name": "@vtex-mcp/giftcard-hub-api",
   "version": "1.0.0",
   "description": "MCP server for VTEX Gift Card Hub Api",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "vtex-mcp-gift-card-hub-api": "dist/cli.js"
+    "vtex-mcp-giftcard-hub-api": "dist/cli.js"
   },
   "files": [
     "dist"
