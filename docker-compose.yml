@@ -7,291 +7,350 @@
 # Start all servers:   docker compose up
 # Start one server:    docker compose up catalog-api
 # Rebuild all:         docker compose up --build
+#
+# Each server runs on HTTP transport with a unique port (3001-3041).
 
 services:
   catalog-api:
-    build: ./servers/catalog-api
+    build:
+      context: .
+      dockerfile: servers/catalog-api/Dockerfile
     command: ["--transport", "http", "--port", "3000"]
-    ports:
-      - "3001:3000"
+    ports: ["3001:3000"]
     env_file: .env
 
   orders-api:
-    build: ./servers/orders-api
+    build:
+      context: .
+      dockerfile: servers/orders-api/Dockerfile
     command: ["--transport", "http", "--port", "3000"]
-    ports:
-      - "3002:3000"
+    ports: ["3002:3000"]
     env_file: .env
 
   checkout-api:
-    build: ./servers/checkout-api
+    build:
+      context: .
+      dockerfile: servers/checkout-api/Dockerfile
     command: ["--transport", "http", "--port", "3000"]
-    ports:
-      - "3003:3000"
+    ports: ["3003:3000"]
     env_file: .env
 
   payments-api:
-    build: ./servers/payments-api
+    build:
+      context: .
+      dockerfile: servers/payments-api/Dockerfile
     command: ["--transport", "http", "--port", "3000"]
-    ports:
-      - "3004:3000"
+    ports: ["3004:3000"]
     env_file: .env
 
   payments-gateway-api:
-    build: ./servers/payments-gateway-api
+    build:
+      context: .
+      dockerfile: servers/payments-gateway-api/Dockerfile
     command: ["--transport", "http", "--port", "3000"]
-    ports:
-      - "3005:3000"
+    ports: ["3005:3000"]
     env_file: .env
 
   logistics-api:
-    build: ./servers/logistics-api
+    build:
+      context: .
+      dockerfile: servers/logistics-api/Dockerfile
     command: ["--transport", "http", "--port", "3000"]
-    ports:
-      - "3006:3000"
+    ports: ["3006:3000"]
     env_file: .env
 
   inventory-api:
-    build: ./servers/inventory-api
+    build:
+      context: .
+      dockerfile: servers/inventory-api/Dockerfile
     command: ["--transport", "http", "--port", "3000"]
-    ports:
-      - "3007:3000"
+    ports: ["3007:3000"]
     env_file: .env
 
   warehouse-api:
-    build: ./servers/warehouse-api
+    build:
+      context: .
+      dockerfile: servers/warehouse-api/Dockerfile
     command: ["--transport", "http", "--port", "3000"]
-    ports:
-      - "3008:3000"
+    ports: ["3008:3000"]
     env_file: .env
 
   pricing-api:
-    build: ./servers/pricing-api
+    build:
+      context: .
+      dockerfile: servers/pricing-api/Dockerfile
     command: ["--transport", "http", "--port", "3000"]
-    ports:
-      - "3009:3000"
+    ports: ["3009:3000"]
     env_file: .env
 
   promotions-and-taxes-api:
-    build: ./servers/promotions-and-taxes-api
+    build:
+      context: .
+      dockerfile: servers/promotions-and-taxes-api/Dockerfile
     command: ["--transport", "http", "--port", "3000"]
-    ports:
-      - "3010:3000"
+    ports: ["3010:3000"]
     env_file: .env
 
   search-api:
-    build: ./servers/search-api
+    build:
+      context: .
+      dockerfile: servers/search-api/Dockerfile
     command: ["--transport", "http", "--port", "3000"]
-    ports:
-      - "3011:3000"
+    ports: ["3011:3000"]
     env_file: .env
 
   suggestions-api:
-    build: ./servers/suggestions-api
+    build:
+      context: .
+      dockerfile: servers/suggestions-api/Dockerfile
     command: ["--transport", "http", "--port", "3000"]
-    ports:
-      - "3012:3000"
+    ports: ["3012:3000"]
     env_file: .env
 
   customer-credit-api:
-    build: ./servers/customer-credit-api
+    build:
+      context: .
+      dockerfile: servers/customer-credit-api/Dockerfile
     command: ["--transport", "http", "--port", "3000"]
-    ports:
-      - "3013:3000"
+    ports: ["3013:3000"]
     env_file: .env
 
   subscriptions-api:
-    build: ./servers/subscriptions-api
+    build:
+      context: .
+      dockerfile: servers/subscriptions-api/Dockerfile
     command: ["--transport", "http", "--port", "3000"]
-    ports:
-      - "3014:3000"
+    ports: ["3014:3000"]
     env_file: .env
 
   marketplace-api:
-    build: ./servers/marketplace-api
+    build:
+      context: .
+      dockerfile: servers/marketplace-api/Dockerfile
     command: ["--transport", "http", "--port", "3000"]
-    ports:
-      - "3015:3000"
+    ports: ["3015:3000"]
     env_file: .env
 
   master-data-api-v2:
-    build: ./servers/master-data-api-v2
+    build:
+      context: .
+      dockerfile: servers/master-data-api-v2/Dockerfile
     command: ["--transport", "http", "--port", "3000"]
-    ports:
-      - "3016:3000"
+    ports: ["3016:3000"]
     env_file: .env
 
   master-data-api-v10:
-    build: ./servers/master-data-api-v10
+    build:
+      context: .
+      dockerfile: servers/master-data-api-v10/Dockerfile
     command: ["--transport", "http", "--port", "3000"]
-    ports:
-      - "3017:3000"
+    ports: ["3017:3000"]
     env_file: .env
 
   cms-legacy-portal-api:
-    build: ./servers/cms-legacy-portal-api
+    build:
+      context: .
+      dockerfile: servers/cms-legacy-portal-api/Dockerfile
     command: ["--transport", "http", "--port", "3000"]
-    ports:
-      - "3018:3000"
+    ports: ["3018:3000"]
     env_file: .env
 
   vtex-id-api:
-    build: ./servers/vtex-id-api
+    build:
+      context: .
+      dockerfile: servers/vtex-id-api/Dockerfile
     command: ["--transport", "http", "--port", "3000"]
-    ports:
-      - "3019:3000"
+    ports: ["3019:3000"]
     env_file: .env
 
   license-manager-api:
-    build: ./servers/license-manager-api
+    build:
+      context: .
+      dockerfile: servers/license-manager-api/Dockerfile
     command: ["--transport", "http", "--port", "3000"]
-    ports:
-      - "3020:3000"
+    ports: ["3020:3000"]
     env_file: .env
 
   session-manager-api:
-    build: ./servers/session-manager-api
+    build:
+      context: .
+      dockerfile: servers/session-manager-api/Dockerfile
     command: ["--transport", "http", "--port", "3000"]
-    ports:
-      - "3021:3000"
+    ports: ["3021:3000"]
     env_file: .env
 
   antifraud-provider-api:
-    build: ./servers/antifraud-provider-api
+    build:
+      context: .
+      dockerfile: servers/antifraud-provider-api/Dockerfile
     command: ["--transport", "http", "--port", "3000"]
-    ports:
-      - "3022:3000"
+    ports: ["3022:3000"]
     env_file: .env
 
   gift-card-api:
-    build: ./servers/gift-card-api
+    build:
+      context: .
+      dockerfile: servers/gift-card-api/Dockerfile
     command: ["--transport", "http", "--port", "3000"]
-    ports:
-      - "3023:3000"
+    ports: ["3023:3000"]
     env_file: .env
 
   gift-card-hub-api:
-    build: ./servers/gift-card-hub-api
+    build:
+      context: .
+      dockerfile: servers/gift-card-hub-api/Dockerfile
     command: ["--transport", "http", "--port", "3000"]
-    ports:
-      - "3024:3000"
+    ports: ["3024:3000"]
     env_file: .env
 
   gift-card-provider-protocol:
-    build: ./servers/gift-card-provider-protocol
+    build:
+      context: .
+      dockerfile: servers/gift-card-provider-protocol/Dockerfile
     command: ["--transport", "http", "--port", "3000"]
-    ports:
-      - "3025:3000"
+    ports: ["3025:3000"]
     env_file: .env
 
   payment-provider-protocol:
-    build: ./servers/payment-provider-protocol
+    build:
+      context: .
+      dockerfile: servers/payment-provider-protocol/Dockerfile
     command: ["--transport", "http", "--port", "3000"]
-    ports:
-      - "3026:3000"
+    ports: ["3026:3000"]
     env_file: .env
 
   rates-and-benefits-api:
-    build: ./servers/rates-and-benefits-api
+    build:
+      context: .
+      dockerfile: servers/rates-and-benefits-api/Dockerfile
     command: ["--transport", "http", "--port", "3000"]
-    ports:
-      - "3027:3000"
+    ports: ["3027:3000"]
     env_file: .env
 
   sku-bindings-api:
-    build: ./servers/sku-bindings-api
+    build:
+      context: .
+      dockerfile: servers/sku-bindings-api/Dockerfile
     command: ["--transport", "http", "--port", "3000"]
-    ports:
-      - "3028:3000"
+    ports: ["3028:3000"]
     env_file: .env
 
   specification-api:
-    build: ./servers/specification-api
+    build:
+      context: .
+      dockerfile: servers/specification-api/Dockerfile
     command: ["--transport", "http", "--port", "3000"]
-    ports:
-      - "3029:3000"
+    ports: ["3029:3000"]
     env_file: .env
 
   brand-api:
-    build: ./servers/brand-api
+    build:
+      context: .
+      dockerfile: servers/brand-api/Dockerfile
     command: ["--transport", "http", "--port", "3000"]
-    ports:
-      - "3030:3000"
+    ports: ["3030:3000"]
     env_file: .env
 
   category-api:
-    build: ./servers/category-api
+    build:
+      context: .
+      dockerfile: servers/category-api/Dockerfile
     command: ["--transport", "http", "--port", "3000"]
-    ports:
-      - "3031:3000"
+    ports: ["3031:3000"]
     env_file: .env
 
   collection-beta-api:
-    build: ./servers/collection-beta-api
+    build:
+      context: .
+      dockerfile: servers/collection-beta-api/Dockerfile
     command: ["--transport", "http", "--port", "3000"]
-    ports:
-      - "3032:3000"
+    ports: ["3032:3000"]
     env_file: .env
 
   headless-cms-api:
-    build: ./servers/headless-cms-api
+    build:
+      context: .
+      dockerfile: servers/headless-cms-api/Dockerfile
     command: ["--transport", "http", "--port", "3000"]
-    ports:
-      - "3033:3000"
+    ports: ["3033:3000"]
     env_file: .env
 
   vtex-do-api:
-    build: ./servers/vtex-do-api
+    build:
+      context: .
+      dockerfile: servers/vtex-do-api/Dockerfile
     command: ["--transport", "http", "--port", "3000"]
-    ports:
-      - "3034:3000"
+    ports: ["3034:3000"]
     env_file: .env
 
   policies-system-api:
-    build: ./servers/policies-system-api
+    build:
+      context: .
+      dockerfile: servers/policies-system-api/Dockerfile
     command: ["--transport", "http", "--port", "3000"]
-    ports:
-      - "3035:3000"
+    ports: ["3035:3000"]
     env_file: .env
 
   reviews-and-ratings-api:
-    build: ./servers/reviews-and-ratings-api
+    build:
+      context: .
+      dockerfile: servers/reviews-and-ratings-api/Dockerfile
     command: ["--transport", "http", "--port", "3000"]
-    ports:
-      - "3036:3000"
+    ports: ["3036:3000"]
     env_file: .env
 
   message-center-api:
-    build: ./servers/message-center-api
+    build:
+      context: .
+      dockerfile: servers/message-center-api/Dockerfile
     command: ["--transport", "http", "--port", "3000"]
-    ports:
-      - "3037:3000"
+    ports: ["3037:3000"]
     env_file: .env
 
   tracking-api:
-    build: ./servers/tracking-api
+    build:
+      context: .
+      dockerfile: servers/tracking-api/Dockerfile
     command: ["--transport", "http", "--port", "3000"]
-    ports:
-      - "3038:3000"
+    ports: ["3038:3000"]
     env_file: .env
 
   pickup-points-api:
-    build: ./servers/pickup-points-api
+    build:
+      context: .
+      dockerfile: servers/pickup-points-api/Dockerfile
     command: ["--transport", "http", "--port", "3000"]
-    ports:
-      - "3039:3000"
+    ports: ["3039:3000"]
     env_file: .env
 
   shipping-network-api:
-    build: ./servers/shipping-network-api
+    build:
+      context: .
+      dockerfile: servers/shipping-network-api/Dockerfile
     command: ["--transport", "http", "--port", "3000"]
-    ports:
-      - "3040:3000"
+    ports: ["3040:3000"]
     env_file: .env
 
   intelligent-search-events-api:
-    build: ./servers/intelligent-search-events-api
+    build:
+      context: .
+      dockerfile: servers/intelligent-search-events-api/Dockerfile
     command: ["--transport", "http", "--port", "3000"]
-    ports:
-      - "3041:3000"
+    ports: ["3041:3000"]
+    env_file: .env
+
+  tax-service-provider-protocol:
+    build:
+      context: .
+      dockerfile: servers/tax-service-provider-protocol/Dockerfile
+    command: ["--transport", "http", "--port", "3000"]
+    ports: ["3042:3000"]
+    env_file: .env
+
+  returns-api:
+    build:
+      context: .
+      dockerfile: servers/returns-api/Dockerfile
+    command: ["--transport", "http", "--port", "3000"]
+    ports: ["3043:3000"]
     env_file: .env

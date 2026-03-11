@@ -1,0 +1,93 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Returns API",
+    "description": "API for managing order returns in VTEX. Returns are processed through the Orders API invoice notification endpoint, which generates return invoices and corresponding refunds. This spec covers the return-related endpoints from the VTEX OMS.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://{accountName}.{environment}.com.br",
+      "variables": {
+        "accountName": { "default": "apiexamples", "description": "VTEX account name" },
+        "environment": { "default": "vtexcommercestable", "description": "VTEX environment" }
+      }
+    }
+  ],
+  "paths": {
+    "/api/oms/pvt/orders/{orderId}/invoice": {
+      "post": {
+        "operationId": "createReturnInvoice",
+        "summary": "Create return invoice for order",
+        "description": "Submits a return invoice (type 'Input') for an order, triggering the refund process. This is the primary endpoint for processing returns in VTEX.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" },
+            "description": "Order ID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["type", "invoiceNumber", "invoiceValue", "items"],
+                "properties": {
+                  "type": { "type": "string", "enum": ["Output", "Input"], "description": "Invoice type. Use 'Input' for returns." },
+                  "invoiceNumber": { "type": "string", "description": "Return invoice number" },
+                  "invoiceValue": { "type": "integer", "description": "Return value in cents" },
+                  "invoiceKey": { "type": "string", "description": "Invoice access key" },
+                  "invoiceUrl": { "type": "string", "description": "URL of the return invoice" },
+                  "issuanceDate": { "type": "string", "description": "Invoice issuance date (ISO 8601)" },
+                  "items": {
+                    "type": "array",
+                    "description": "Items being returned",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": { "type": "string", "description": "SKU ID" },
+                        "quantity": { "type": "integer", "description": "Quantity being returned" },
+                        "price": { "type": "integer", "description": "Item price in cents" }
+                      },
+                      "required": ["id", "quantity", "price"]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Return invoice created successfully" },
+          "400": { "description": "Bad Request - Invalid invoice data" },
+          "404": { "description": "Order not found" },
+          "409": { "description": "Conflict - Invoice number already exists" }
+        }
+      }
+    },
+    "/api/oms/pvt/orders/{orderId}": {
+      "get": {
+        "operationId": "getOrderWithReturnInfo",
+        "summary": "Get order details including return information",
+        "description": "Retrieves full order details, including any return invoices (type 'Input') and refund status.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" },
+            "description": "Order ID"
+          }
+        ],
+        "responses": {
+          "200": { "description": "Order details with return information" },
+          "404": { "description": "Order not found" }
+        }
+      }
+    }
+  }
+}

@@ -625,6 +625,25 @@ importers:
         specifier: ^5.7.3
         version: 5.9.3
 
+  servers/returns-api:
+    dependencies:
+      '@vtex-mcp/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
+      axios:
+        specifier: ^1.7.9
+        version: 1.13.6
+      zod:
+        specifier: ^3.24.2
+        version: 3.25.76
+    devDependencies:
+      '@types/node':
+        specifier: ^22.10.5
+        version: 22.19.15
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+
   servers/reviews-and-ratings-api:
     dependencies:
       '@vtex-mcp/shared':
@@ -759,6 +778,25 @@ importers:
         version: 5.9.3
 
   servers/suggestions-api:
+    dependencies:
+      '@vtex-mcp/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
+      axios:
+        specifier: ^1.7.9
+        version: 1.13.6
+      zod:
+        specifier: ^3.24.2
+        version: 3.25.76
+    devDependencies:
+      '@types/node':
+        specifier: ^22.10.5
+        version: 22.19.15
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+
+  servers/tax-service-provider-protocol:
     dependencies:
       '@vtex-mcp/shared':
         specifier: workspace:*

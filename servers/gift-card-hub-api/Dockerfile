@@ -1,14 +1,16 @@
+# Build from monorepo root: docker build -f servers/gift-card-hub-api/Dockerfile .
 FROM node:20-slim AS builder
+RUN corepack enable && corepack prepare pnpm@9.15.4 --activate
 WORKDIR /app
-COPY package.json tsconfig.json ./
-COPY src/ src/
-RUN npm install && npm run build
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml tsconfig.base.json ./
+COPY packages/shared/ packages/shared/
+COPY servers/gift-card-hub-api/ servers/gift-card-hub-api/
+RUN pnpm install --frozen-lockfile && pnpm build
 
 FROM node:20-slim
+RUN corepack enable && corepack prepare pnpm@9.15.4 --activate
 WORKDIR /app
-COPY --from=builder /app/dist dist/
-COPY --from=builder /app/node_modules node_modules/
-COPY package.json ./
+COPY --from=builder /app/ /app/
 ENV NODE_ENV=production
-ENTRYPOINT ["node", "dist/cli.js"]
+ENTRYPOINT ["node", "servers/gift-card-hub-api/dist/cli.js"]
 CMD ["--transport", "stdio"]

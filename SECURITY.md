@@ -6,7 +6,7 @@ If you discover a security vulnerability in this project, please report it respo
 
 **Do not open a public GitHub issue.**
 
-Instead, please email **security@vtex-mcp.dev** (or open a private security advisory via GitHub) with:
+Instead, open a private security advisory via GitHub with:
 
 1. A description of the vulnerability
 2. Steps to reproduce

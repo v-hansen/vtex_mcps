@@ -1,0 +1,62 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Tax Service Provider Protocol",
+    "description": "Protocol that defines how to build an integration of an external tax calculation provider with VTEX Checkout. The tax provider must expose an endpoint that receives cart data and returns calculated taxes per item.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://{accountName}.{environment}.com.br",
+      "variables": {
+        "accountName": { "default": "apiexamples", "description": "VTEX account name" },
+        "environment": { "default": "vtexcommercestable", "description": "VTEX environment" }
+      }
+    }
+  ],
+  "paths": {
+    "/api/checkout/pvt/configuration/orderForm": {
+      "get": {
+        "operationId": "getOrderFormConfiguration",
+        "summary": "Get orderForm configuration",
+        "description": "Retrieves the current orderForm configuration, including the taxConfiguration object with the external tax service URL and authorization header.",
+        "parameters": [],
+        "responses": {
+          "200": { "description": "OK" },
+          "401": { "description": "Unauthorized" }
+        }
+      },
+      "post": {
+        "operationId": "updateOrderFormConfiguration",
+        "summary": "Update orderForm configuration",
+        "description": "Updates the orderForm configuration, including the taxConfiguration object to activate or modify the external tax service integration.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "taxConfiguration": {
+                    "type": "object",
+                    "properties": {
+                      "url": { "type": "string", "description": "External API endpoint of the tax provider" },
+                      "authorizationHeader": { "type": "string", "description": "Authorization header value for the tax API" },
+                      "appId": { "type": "string", "description": "App identifier" },
+                      "isMarketplaceResponsibleForTaxes": { "type": "boolean", "description": "Whether the marketplace is responsible for tax calculation" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "OK" },
+          "401": { "description": "Unauthorized" },
+          "400": { "description": "Bad Request" }
+        }
+      }
+    }
+  }
+}
