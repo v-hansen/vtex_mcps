@@ -26,5 +26,9 @@
     "fast-check": "^4.0.0",
     "vitest": "^3.0.4"
   },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "license": "MIT"
 }
