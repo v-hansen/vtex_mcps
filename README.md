@@ -105,6 +105,68 @@ export VTEX_APP_TOKEN=your-app-token
 
 ---
 
+## Running from Source (Custom Setup)
+
+If you want to fork, modify, or run the servers locally without npm:
+
+```bash
+# 1. Clone the repo
+git clone https://github.com/v-hansen/vtex_mcps.git
+cd vtex-mcp-servers
+
+# 2. Install dependencies
+pnpm install
+
+# 3. Build everything
+pnpm build
+
+# 4. Run any server directly
+node servers/catalog-api/dist/cli.js
+```
+
+Then point your MCP client to the local path instead of `npx`:
+
+```json
+{
+  "mcpServers": {
+    "vtex-catalog": {
+      "command": "node",
+      "args": ["/absolute/path/to/vtex-mcp-servers/servers/catalog-api/dist/cli.js"],
+      "env": {
+        "VTEX_ACCOUNT_NAME": "mystore",
+        "VTEX_APP_KEY": "your-app-key",
+        "VTEX_APP_TOKEN": "your-app-token"
+      }
+    }
+  }
+}
+```
+
+This is useful if you want to:
+- Customize tool behavior or add custom tools
+- Use a private fork with internal modifications
+- Test changes before publishing
+- Run servers without depending on the npm registry
+
+You can also regenerate any server after modifying the shared library or generator:
+
+```bash
+# Rebuild the generator
+pnpm build --filter @vtex-mcp/generator
+
+# Regenerate a specific server
+npx vtex-mcp-generator \
+  --spec specs/catalog-api.json \
+  --output servers/catalog-api \
+  --name "@vtex-mcp/catalog-api" \
+  --server-name "VTEX Catalog API"
+
+# Rebuild the server
+pnpm build --filter @vtex-mcp/catalog-api
+```
+
+---
+
 ## Authentication
 
 | Variable | Required | Description |
