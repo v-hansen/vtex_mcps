@@ -264,8 +264,8 @@ vtex-mcp-servers/
 
 ```bash
 # Clone and install
-git clone https://github.com/your-org/vtex-mcp-servers.git
-cd vtex-mcp-servers
+git clone https://github.com/v-hansen/vtex_mcps.git
+cd vtex-mcps
 pnpm install
 
 # Build everything
