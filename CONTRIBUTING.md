@@ -1,54 +1,50 @@
-# Contributing to VTEX MCP Servers
+# Contributing
 
-Thanks for your interest in contributing! This guide covers how to add new MCP servers, coding standards, testing, and the PR process.
+Thanks for considering a contribution. This guide covers everything you need to get started.
 
-## Project Structure
+## Table of Contents
 
-```
-vtex-mcp-servers/
-├── packages/
-│   ├── shared/          # @vtex-mcp/shared — config, HTTP client, errors, validation, server factory
-│   └── generator/       # @vtex-mcp/generator — OpenAPI spec → MCP server code generator
-├── servers/             # Generated MCP server packages (one per VTEX API group)
-├── specs/               # Downloaded VTEX OpenAPI spec files
-├── .github/workflows/   # CI and publish workflows
-├── docker-compose.yml   # Local dev: run all servers
-└── tsconfig.base.json   # Shared TypeScript config
-```
+- [Getting Started](#getting-started)
+- [Adding a New MCP Server](#adding-a-new-mcp-server)
+- [Coding Standards](#coding-standards)
+- [Testing](#testing)
+- [Pull Request Process](#pull-request-process)
+- [Reporting Issues](#reporting-issues)
+
+---
 
 ## Getting Started
 
 ```bash
-# Clone and install
 git clone https://github.com/your-org/vtex-mcp-servers.git
 cd vtex-mcp-servers
 pnpm install
-
-# Build all packages
 pnpm build
-
-# Run all tests
 pnpm test
-
-# Lint and format
-pnpm lint
-pnpm format
 ```
+
+Requirements:
+- Node.js >= 18
+- pnpm >= 8
+
+---
 
 ## Adding a New MCP Server
 
-### 1. Download the OpenAPI Spec
+### 1. Get the OpenAPI spec
 
-Download the official VTEX OpenAPI spec for the API group and save it to `specs/`:
+Download the official VTEX OpenAPI spec and save it to `specs/`:
 
 ```bash
-curl -o specs/my-api.json https://developers.vtex.com/docs/api-reference/my-api/openapi-spec
+curl -o specs/my-api.json \
+  "https://raw.githubusercontent.com/vtex/openapi-schemas/master/VTEX%20-%20My%20API.json"
 ```
 
-### 2. Run the Generator
+### 2. Generate the server
 
 ```bash
-pnpm --filter @vtex-mcp/generator run build
+pnpm build --filter @vtex-mcp/generator
+
 npx vtex-mcp-generator \
   --spec specs/my-api.json \
   --output servers/my-api \
@@ -56,120 +52,138 @@ npx vtex-mcp-generator \
   --server-name "VTEX My API"
 ```
 
-This generates the full server package under `servers/my-api/` with:
-- `src/index.ts` — server setup and tool registration
-- `src/tools.ts` — generated tool definitions with Zod schemas
-- `src/cli.ts` — CLI entry point (`--transport stdio|http`, `--port`)
-- `package.json` — scoped package with bin entry
-- `tsconfig.json` — extends root config
-- `README.md` — auto-generated tool documentation
-- `Dockerfile` — minimal container image
+This creates a complete server package with:
 
-### 3. Verify the Generated Server
-
-```bash
-# Install dependencies
-pnpm install
-
-# Build the new server
-pnpm --filter @vtex-mcp/my-api run build
-
-# Run tests
-pnpm --filter @vtex-mcp/my-api run test
+```
+servers/my-api/
+├── src/
+│   ├── cli.ts       # CLI entry point (--transport, --port)
+│   ├── index.ts     # Server setup
+│   └── tools.ts     # Generated tool definitions
+├── package.json     # Scoped npm package with bin entry
+├── tsconfig.json
+├── Dockerfile
+└── README.md        # Auto-generated tool documentation
 ```
 
-### 4. Add to Docker Compose
+### 3. Verify
 
-Add a service entry in `docker-compose.yml` for the new server:
+```bash
+pnpm install
+pnpm build --filter @vtex-mcp/my-api
+pnpm test --filter @vtex-mcp/my-api
+```
+
+### 4. Update docker-compose.yml
+
+Add a service entry with the next available port:
 
 ```yaml
 my-api:
   build: ./servers/my-api
-  environment:
-    - VTEX_ACCOUNT_NAME=${VTEX_ACCOUNT_NAME}
-    - VTEX_APP_KEY=${VTEX_APP_KEY}
-    - VTEX_APP_TOKEN=${VTEX_APP_TOKEN}
+  command: ["--transport", "http", "--port", "3000"]
+  ports:
+    - "30XX:3000"
+  env_file: .env
 ```
+
+---
 
 ## Coding Standards
 
 ### TypeScript
 
-- Strict mode enabled (`tsconfig.base.json`)
-- ES2022 target with NodeNext module resolution
+- Strict mode, ES2022 target, NodeNext module resolution
 - ESM only (`"type": "module"` in all packages)
+- `.js` extensions in all imports (TypeScript ESM requirement)
 - All packages extend `tsconfig.base.json`
-
-### Linting and Formatting
-
-- **ESLint** with `@typescript-eslint` — run `pnpm lint`
-- **Prettier** — run `pnpm format`
-- Config: single quotes, trailing commas, 100 char print width, 2-space indent
-- Unused vars prefixed with `_` are allowed
-- `no-console` is a warning (use `console.warn` / `console.error` only)
 
 ### Naming Conventions
 
-- MCP tool names: `{apiGroup}_{operationId}` in snake_case (e.g., `catalog_getProduct`)
-- npm packages: `@vtex-mcp/{api-group-name}` in kebab-case
-- Server directories: `servers/{api-group-name}/`
+| What | Convention | Example |
+|---|---|---|
+| MCP tool names | `{apiGroup}_{operationId}` snake_case | `catalog_get_product` |
+| npm packages | `@vtex-mcp/{api-group}` kebab-case | `@vtex-mcp/catalog-api` |
+| Server directories | `servers/{api-group}/` | `servers/catalog-api/` |
+| Test files (unit) | `{module}.test.ts` | `config.test.ts` |
+| Test files (property) | `{module}.property.test.ts` | `config.property.test.ts` |
 
-## Testing Guidelines
+### Linting and Formatting
+
+```bash
+pnpm lint          # ESLint
+pnpm format        # Prettier (write)
+pnpm format:check  # Prettier (check only)
+```
+
+---
+
+## Testing
 
 We use **vitest** for unit tests and **fast-check** for property-based tests.
 
-### Running Tests
+### Running tests
 
 ```bash
-# All tests
-pnpm test
-
-# Single package
-pnpm --filter @vtex-mcp/shared run test
-
-# Watch mode (local dev only)
-pnpm --filter @vtex-mcp/shared run test:watch
+pnpm test                              # All packages
+pnpm test --filter @vtex-mcp/shared    # Single package
 ```
 
-### Unit Tests
+### Writing tests
 
-- Co-locate tests in `__tests__/` directories next to source
-- File naming: `{module}.test.ts`
-- Cover specific examples, edge cases, and error conditions
-- Use vitest built-in mocking for HTTP client and env vars
+- Place tests in `__tests__/` next to source files
+- Unit tests: specific examples, edge cases, error conditions
+- Property tests: universal invariants with 100+ iterations
+- Tag property tests with the design property reference:
 
-### Property-Based Tests
+```typescript
+// Feature: vtex-mcp-servers, Property 8: Configuration Loading from Environment Variables
+```
 
-- File naming: `{module}.property.test.ts`
-- Use fast-check with a minimum of 100 iterations per property
-- Tag each property test with a comment referencing the design property:
-  ```typescript
-  // Feature: vtex-mcp-servers, Property 1: OpenAPI Spec Round-Trip Consistency
-  ```
-- Focus on universal invariants (e.g., "for any valid input, output satisfies X")
+### What to test
 
-### What to Test
+- **Shared library changes** → unit + property tests for the affected module
+- **Generator changes** → unit + property tests, then re-generate a sample server
+- **Generated server issues** → fix the generator, not the generated code
 
-- **Shared library changes**: unit + property tests for the affected module
-- **Generator changes**: unit + property tests, then re-generate a sample server and verify
-- **Generated server changes**: prefer fixing the generator over hand-editing generated code
+---
 
 ## Pull Request Process
 
-1. **Branch** from `main` with a descriptive name (e.g., `feat/add-returns-api`, `fix/auth-header-bug`)
-2. **Make your changes** following the coding standards above
-3. **Run the full test suite** — `pnpm build && pnpm test`
-4. **Lint and format** — `pnpm lint && pnpm format:check`
-5. **Write a clear PR description** explaining what changed and why
-6. **Link related issues** if applicable
-7. CI must pass (build + test + lint) before merge
+1. Fork the repo and create a branch from `main`
+   - `feat/add-returns-api` for new features
+   - `fix/auth-header-bug` for bug fixes
+2. Make your changes following the standards above
+3. Run the full suite:
+   ```bash
+   pnpm build
+   pnpm test
+   pnpm lint
+   pnpm format:check
+   ```
+4. Open a PR with a clear description of what and why
+5. CI must pass before merge
 
 ### PR Checklist
 
-- [ ] Code builds without errors (`pnpm build`)
+- [ ] Builds without errors (`pnpm build`)
 - [ ] All tests pass (`pnpm test`)
-- [ ] Linting passes (`pnpm lint`)
-- [ ] Formatting is correct (`pnpm format:check`)
-- [ ] New MCP servers include generated tests
-- [ ] `docker-compose.yml` updated if adding a new server
-- [ ] README updated if adding user-facing changes
+- [ ] Lint passes (`pnpm lint`)
+- [ ] Format is correct (`pnpm format:check`)
+- [ ] New servers include generated README
+- [ ] `docker-compose.yml` updated if adding a server
+- [ ] Root README updated if adding user-facing changes
+
+---
+
+## Reporting Issues
+
+- **Bugs**: Use the [bug report template](.github/ISSUE_TEMPLATE/bug_report.md)
+- **Feature requests**: Use the [feature request template](.github/ISSUE_TEMPLATE/feature_request.md)
+- **Security vulnerabilities**: See [SECURITY.md](SECURITY.md) — do not open a public issue
+
+---
+
+## Code of Conduct
+
+This project follows the [Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.md). By participating, you agree to uphold it.

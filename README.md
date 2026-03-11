@@ -1,207 +1,266 @@
+<p align="center">
+  <img src="https://img.shields.io/badge/MCP-servers-blue?style=flat-square" alt="MCP Servers" />
+  <img src="https://img.shields.io/badge/VTEX-APIs-E31C58?style=flat-square" alt="VTEX APIs" />
+  <img src="https://img.shields.io/badge/TypeScript-strict-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" alt="MIT License" />
+  <img src="https://img.shields.io/badge/servers-41-orange?style=flat-square" alt="41 Servers" />
+  <img src="https://img.shields.io/badge/tools-1,669-purple?style=flat-square" alt="1,669 Tools" />
+</p>
+
 # VTEX MCP Servers
 
-A collection of 41 [Model Context Protocol](https://modelcontextprotocol.io/) servers that expose every public VTEX e-commerce API to AI assistants. Each API group is a standalone MCP server — independently installable, configurable, and deployable as `@vtex-mcp/{api-group}`.
+**41 standalone [Model Context Protocol](https://modelcontextprotocol.io/) servers exposing every public VTEX e-commerce API to AI assistants.**
 
-Built with TypeScript, generated from official VTEX OpenAPI specifications, and organized as a pnpm workspace monorepo.
+Each VTEX API group is its own MCP server — install only what you need via `npx`, configure your credentials, and let Claude, Cursor, Kiro, or any MCP-compatible client interact with your VTEX store.
+
+All servers are auto-generated from official [VTEX OpenAPI specifications](https://github.com/vtex/openapi-schemas), ensuring tools stay accurate and in sync with the platform.
+
+---
+
+## Why?
+
+VTEX has 40+ API groups with hundreds of endpoints. Manually wiring each one into an AI assistant is tedious and error-prone. This project solves that:
+
+- **One command** to run any VTEX API as an MCP server
+- **1,669 tools** covering catalog, orders, checkout, payments, logistics, and more
+- **Zero hand-written boilerplate** — a code generator reads OpenAPI specs and produces fully typed, validated MCP servers
+- **Credential sanitization** built in — API keys never leak through error messages
+
+---
+
+## Quick Start
+
+### 1. Run a server
+
+```bash
+npx @vtex-mcp/catalog-api
+```
+
+### 2. Set your credentials
+
+```bash
+export VTEX_ACCOUNT_NAME=mystore
+export VTEX_APP_KEY=vtexappkey-mystore-ABCDEF
+export VTEX_APP_TOKEN=your-app-token
+```
+
+### 3. Connect your AI client
+
+
+**Claude Desktop** — add to `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "vtex-catalog": {
+      "command": "npx",
+      "args": ["@vtex-mcp/catalog-api"],
+      "env": {
+        "VTEX_ACCOUNT_NAME": "mystore",
+        "VTEX_APP_KEY": "your-app-key",
+        "VTEX_APP_TOKEN": "your-app-token"
+      }
+    }
+  }
+}
+```
+
+**Cursor** — add to `.cursor/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "vtex-catalog": {
+      "command": "npx",
+      "args": ["@vtex-mcp/catalog-api"],
+      "env": {
+        "VTEX_ACCOUNT_NAME": "mystore",
+        "VTEX_APP_KEY": "your-app-key",
+        "VTEX_APP_TOKEN": "your-app-token"
+      }
+    }
+  }
+}
+```
+
+**Kiro** — add to `.kiro/settings/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "vtex-catalog": {
+      "command": "npx",
+      "args": ["@vtex-mcp/catalog-api"],
+      "env": {
+        "VTEX_ACCOUNT_NAME": "mystore",
+        "VTEX_APP_KEY": "your-app-key",
+        "VTEX_APP_TOKEN": "your-app-token"
+      }
+    }
+  }
+}
+```
+
+> Mix and match — add as many servers as you need. Each one is independent.
+
+---
+
+## Authentication
+
+| Variable | Required | Description |
+|---|---|---|
+| `VTEX_ACCOUNT_NAME` | Yes | Your VTEX account name |
+| `VTEX_APP_KEY` | Yes* | App key from VTEX License Manager |
+| `VTEX_APP_TOKEN` | Yes* | App token paired with the key |
+| `VTEX_AUTH_TOKEN` | No | User token (alternative to key/token pair) |
+| `VTEX_ENVIRONMENT` | No | API environment (default: `vtexcommercestable`) |
+
+\* Required unless `VTEX_AUTH_TOKEN` is provided.
+
+---
+
+## Transport Modes
+
+Every server supports two transport modes:
+
+| Mode | Flag | Use Case |
+|---|---|---|
+| **stdio** (default) | `--transport stdio` | Local MCP clients (Claude Desktop, Cursor, Kiro) |
+| **HTTP/SSE** | `--transport http --port 3000` | Remote deployment, multi-client scenarios |
+
+```bash
+# stdio (default)
+npx @vtex-mcp/orders-api
+
+# HTTP with custom port
+npx @vtex-mcp/orders-api --transport http --port 8080
+```
+
+---
+
+## Available Servers
+
+<details>
+<summary><strong>41 servers — click to expand full list</strong></summary>
+
+| Server | Package | Tools |
+|---|---|---|
+| Antifraud Provider | `@vtex-mcp/antifraud-provider-api` | Antifraud provider integration |
+| Brand | `@vtex-mcp/brand-api` | Brand management |
+| Catalog | `@vtex-mcp/catalog-api` | Products, SKUs, categories, specs (193 tools) |
+| Category | `@vtex-mcp/category-api` | Category tree management |
+| Checkout | `@vtex-mcp/checkout-api` | Cart and checkout operations |
+| CMS (Legacy) | `@vtex-mcp/cms-legacy-portal-api` | Legacy CMS portal |
+| Collection (Beta) | `@vtex-mcp/collection-beta-api` | Product collections |
+| Customer Credit | `@vtex-mcp/customer-credit-api` | Customer credit management |
+| Gift Card | `@vtex-mcp/gift-card-api` | Gift card operations |
+| Gift Card Hub | `@vtex-mcp/gift-card-hub-api` | Gift card hub integration |
+| Gift Card Provider | `@vtex-mcp/gift-card-provider-protocol` | Gift card provider protocol |
+| Headless CMS | `@vtex-mcp/headless-cms-api` | Headless CMS content |
+| Intelligent Search Events | `@vtex-mcp/intelligent-search-events-api` | Search analytics |
+| Inventory | `@vtex-mcp/inventory-api` | Inventory management |
+| License Manager | `@vtex-mcp/license-manager-api` | Users, roles, permissions |
+| Logistics | `@vtex-mcp/logistics-api` | Shipping and logistics |
+| Marketplace | `@vtex-mcp/marketplace-api` | Marketplace operations |
+| Master Data v2 | `@vtex-mcp/master-data-api-v2` | Master Data v2 |
+| Master Data v10 | `@vtex-mcp/master-data-api-v10` | Master Data v10.2 |
+| Message Center | `@vtex-mcp/message-center-api` | Transactional messages |
+| Orders | `@vtex-mcp/orders-api` | Order management |
+| Payment Provider | `@vtex-mcp/payment-provider-protocol` | Payment provider integration |
+| Payments | `@vtex-mcp/payments-api` | Payment transactions |
+| Payments Gateway | `@vtex-mcp/payments-gateway-api` | Payment gateway |
+| Pickup Points | `@vtex-mcp/pickup-points-api` | Pickup point management |
+| Policies System | `@vtex-mcp/policies-system-api` | Policy management |
+| Pricing | `@vtex-mcp/pricing-api` | Price management |
+| Promotions & Taxes | `@vtex-mcp/promotions-and-taxes-api` | Promotions and tax rules |
+| Rates and Benefits | `@vtex-mcp/rates-and-benefits-api` | Rates and benefits |
+| Reviews and Ratings | `@vtex-mcp/reviews-and-ratings-api` | Product reviews |
+| Search | `@vtex-mcp/search-api` | VTEX Intelligent Search |
+| Session Manager | `@vtex-mcp/session-manager-api` | Session management |
+| Shipping Network | `@vtex-mcp/shipping-network-api` | Shipping carriers |
+| SKU Bindings | `@vtex-mcp/sku-bindings-api` | SKU binding management |
+| Specification | `@vtex-mcp/specification-api` | Product specifications |
+| Subscriptions | `@vtex-mcp/subscriptions-api` | Subscription management |
+| Suggestions | `@vtex-mcp/suggestions-api` | Marketplace suggestions |
+| Tracking | `@vtex-mcp/tracking-api` | Order tracking |
+| VTEX DO | `@vtex-mcp/vtex-do-api` | Task management |
+| VTEX ID | `@vtex-mcp/vtex-id-api` | Authentication and identity |
+| Warehouse | `@vtex-mcp/warehouse-api` | Warehouse management |
+
+</details>
+
+Each server has its own `README.md` with the full tool list. See `servers/{api-group}/README.md`.
+
+---
 
 ## Architecture
 
 ```mermaid
 graph TB
-    subgraph "Monorepo Root"
-        GEN["Code Generator CLI<br/>packages/generator/"]
-        SHARED["Shared Library<br/>packages/shared/"]
-        SPECS["OpenAPI Specs<br/>specs/"]
+    subgraph Monorepo
+        GEN["Code Generator<br/><code>packages/generator/</code>"]
+        SHARED["Shared Library<br/><code>packages/shared/</code>"]
+        SPECS["OpenAPI Specs<br/><code>specs/*.json</code>"]
     end
 
-    subgraph "Generated MCP Servers (41)"
-        S1["servers/catalog-api/"]
-        S2["servers/orders-api/"]
-        S3["servers/checkout-api/"]
-        SN["servers/...38 more/"]
+    subgraph "41 Generated MCP Servers"
+        S1["catalog-api"]
+        S2["orders-api"]
+        S3["checkout-api"]
+        SN["...38 more"]
     end
 
-    subgraph "MCP Client"
-        CLIENT["Claude Desktop / Cursor / etc."]
-    end
+    CLIENT["AI Client<br/>Claude · Cursor · Kiro"]
+    VTEX["VTEX Platform<br/>https://{account}.vtexcommercestable.com.br"]
 
-    subgraph "VTEX Platform"
-        VTEX["VTEX Commerce APIs<br/>https://{account}.vtexcommercestable.com.br"]
-    end
-
-    SPECS -->|"input"| GEN
-    GEN -->|"generates"| S1
-    GEN -->|"generates"| S2
-    GEN -->|"generates"| S3
-    GEN -->|"generates"| SN
-
-    SHARED -->|"imported by"| S1
-    SHARED -->|"imported by"| S2
-    SHARED -->|"imported by"| S3
-    SHARED -->|"imported by"| SN
-
-    CLIENT -->|"JSON-RPC 2.0<br/>stdio / SSE"| S1
-    CLIENT -->|"JSON-RPC 2.0<br/>stdio / SSE"| S2
-
-    S1 -->|"HTTPS"| VTEX
-    S2 -->|"HTTPS"| VTEX
-    S3 -->|"HTTPS"| VTEX
-    SN -->|"HTTPS"| VTEX
+    SPECS -->|input| GEN
+    GEN -->|generates| S1 & S2 & S3 & SN
+    SHARED -->|imported by| S1 & S2 & S3 & SN
+    CLIENT -->|"JSON-RPC 2.0<br/>stdio / SSE"| S1 & S2
+    S1 & S2 & S3 & SN -->|HTTPS| VTEX
 ```
 
-## Quick Start
+### How it works
 
-### Prerequisites
+1. **OpenAPI specs** from VTEX's official repo are downloaded into `specs/`
+2. The **code generator** parses each spec, converts JSON Schema to Zod validators, and scaffolds a complete MCP server package
+3. Each **generated server** registers tools with the MCP protocol, validates inputs, calls the VTEX API, and returns structured responses
+4. The **shared library** provides the HTTP client (with auth injection), error handling (with credential sanitization), and the MCP server factory
 
-- Node.js >= 18
-- pnpm >= 8
-- VTEX account with API credentials
+### Request flow
 
-### Install and run a single server
-
-```bash
-# Run any server directly via npx
-npx @vtex-mcp/catalog-api
-
-# Or with HTTP/SSE transport
-npx @vtex-mcp/catalog-api --transport http --port 3000
+```
+AI Client → tools/call { name, arguments }
+         → Parameter validation (Zod)
+         → VTEX API request (with auth headers)
+         → Response formatting
+         → AI Client receives structured result
 ```
 
-### Environment Variables
-
-| Variable | Required | Description |
-|---|---|---|
-| `VTEX_ACCOUNT_NAME` | Yes | Your VTEX account name |
-| `VTEX_APP_KEY` | Yes* | VTEX app key for authentication |
-| `VTEX_APP_TOKEN` | Yes* | VTEX app token for authentication |
-| `VTEX_AUTH_TOKEN` | No | Alternative auth token (replaces app key/token) |
-| `VTEX_ENVIRONMENT` | No | VTEX environment (default: `vtexcommercestable`) |
-
-\* Required unless `VTEX_AUTH_TOKEN` is provided.
-
-## MCP Client Configuration
-
-### Claude Desktop
-
-Add to your `claude_desktop_config.json`:
-
-```json
-{
-  "mcpServers": {
-    "vtex-catalog": {
-      "command": "npx",
-      "args": ["@vtex-mcp/catalog-api"],
-      "env": {
-        "VTEX_ACCOUNT_NAME": "your-account",
-        "VTEX_APP_KEY": "your-app-key",
-        "VTEX_APP_TOKEN": "your-app-token"
-      }
-    },
-    "vtex-orders": {
-      "command": "npx",
-      "args": ["@vtex-mcp/orders-api"],
-      "env": {
-        "VTEX_ACCOUNT_NAME": "your-account",
-        "VTEX_APP_KEY": "your-app-key",
-        "VTEX_APP_TOKEN": "your-app-token"
-      }
-    }
-  }
-}
-```
-
-### Cursor
-
-Add to your `.cursor/mcp.json`:
-
-```json
-{
-  "mcpServers": {
-    "vtex-catalog": {
-      "command": "npx",
-      "args": ["@vtex-mcp/catalog-api"],
-      "env": {
-        "VTEX_ACCOUNT_NAME": "your-account",
-        "VTEX_APP_KEY": "your-app-key",
-        "VTEX_APP_TOKEN": "your-app-token"
-      }
-    }
-  }
-}
-```
-
-> Add as many servers as you need — each one is independent. See the full list below.
-
-## Available Servers
-
-| Server | Package | Description |
-|---|---|---|
-| Antifraud Provider API | `@vtex-mcp/antifraud-provider-api` | Antifraud provider integration |
-| Brand API | `@vtex-mcp/brand-api` | Brand management |
-| Catalog API | `@vtex-mcp/catalog-api` | Product catalog management |
-| Category API | `@vtex-mcp/category-api` | Category tree management |
-| Checkout API | `@vtex-mcp/checkout-api` | Cart and checkout operations |
-| CMS (Legacy Portal) | `@vtex-mcp/cms-legacy-portal-api` | Legacy CMS portal |
-| Collection API (Beta) | `@vtex-mcp/collection-beta-api` | Product collections |
-| Customer Credit API | `@vtex-mcp/customer-credit-api` | Customer credit management |
-| Gift Card API | `@vtex-mcp/gift-card-api` | Gift card operations |
-| Gift Card Hub API | `@vtex-mcp/gift-card-hub-api` | Gift card hub integration |
-| Gift Card Provider Protocol | `@vtex-mcp/gift-card-provider-protocol` | Gift card provider protocol |
-| Headless CMS API | `@vtex-mcp/headless-cms-api` | Headless CMS content management |
-| Intelligent Search Events API | `@vtex-mcp/intelligent-search-events-api` | Search analytics events |
-| Inventory API | `@vtex-mcp/inventory-api` | Inventory management |
-| License Manager API | `@vtex-mcp/license-manager-api` | License and user management |
-| Logistics API | `@vtex-mcp/logistics-api` | Logistics and shipping |
-| Marketplace API | `@vtex-mcp/marketplace-api` | Marketplace operations |
-| Master Data API v2 | `@vtex-mcp/master-data-api-v2` | Master Data v2 |
-| Master Data API v10 | `@vtex-mcp/master-data-api-v10` | Master Data v10.2 |
-| Message Center API | `@vtex-mcp/message-center-api` | Transactional message templates |
-| Orders API | `@vtex-mcp/orders-api` | Order management |
-| Payment Provider Protocol | `@vtex-mcp/payment-provider-protocol` | Payment provider integration |
-| Payments API | `@vtex-mcp/payments-api` | Payment transactions |
-| Payments Gateway API | `@vtex-mcp/payments-gateway-api` | Payment gateway operations |
-| Pickup Points API | `@vtex-mcp/pickup-points-api` | Pickup point management |
-| Policies System API | `@vtex-mcp/policies-system-api` | Policy management |
-| Pricing API | `@vtex-mcp/pricing-api` | Price management |
-| Promotions & Taxes API | `@vtex-mcp/promotions-and-taxes-api` | Promotions and tax rules |
-| Rates and Benefits API | `@vtex-mcp/rates-and-benefits-api` | Rates and benefits |
-| Reviews and Ratings API | `@vtex-mcp/reviews-and-ratings-api` | Product reviews and ratings |
-| Search API | `@vtex-mcp/search-api` | VTEX Intelligent Search |
-| Session Manager API | `@vtex-mcp/session-manager-api` | Session management |
-| Shipping Network API | `@vtex-mcp/shipping-network-api` | Shipping network carriers |
-| SKU Bindings API | `@vtex-mcp/sku-bindings-api` | SKU binding management |
-| Specification API | `@vtex-mcp/specification-api` | Product specifications |
-| Subscriptions API | `@vtex-mcp/subscriptions-api` | Subscription management |
-| Suggestions API | `@vtex-mcp/suggestions-api` | Marketplace suggestions |
-| Tracking API | `@vtex-mcp/tracking-api` | Order tracking |
-| VTEX DO API | `@vtex-mcp/vtex-do-api` | Task management (VTEX DO) |
-| VTEX ID API | `@vtex-mcp/vtex-id-api` | Authentication and identity |
-| Warehouse API | `@vtex-mcp/warehouse-api` | Warehouse management |
-
-Each server has its own README with the full list of available tools. See `servers/{api-group}/README.md`.
+---
 
 ## Project Structure
 
 ```
 vtex-mcp-servers/
 ├── packages/
-│   ├── shared/              # @vtex-mcp/shared — HTTP client, auth, validation, MCP server factory
-│   └── generator/           # @vtex-mcp/generator — OpenAPI spec → MCP server code generator
+│   ├── shared/              # HTTP client, auth, validation, error handling, MCP server factory
+│   └── generator/           # OpenAPI spec → MCP server code generator
 ├── servers/                 # 41 generated MCP server packages
-│   ├── catalog-api/
-│   ├── orders-api/
-│   ├── checkout-api/
-│   └── ...
 ├── specs/                   # VTEX OpenAPI specification files
-├── .github/workflows/       # CI/CD (build, test, publish)
-├── docker-compose.yml       # Run all servers locally
-├── pnpm-workspace.yaml
-└── tsconfig.base.json
+├── .github/
+│   ├── workflows/           # CI (build + test) and publish (npm) workflows
+│   ├── ISSUE_TEMPLATE/      # Bug report and feature request templates
+│   └── PULL_REQUEST_TEMPLATE.md
+├── docker-compose.yml       # Run all 41 servers locally
+├── package.json             # Root workspace config
+├── pnpm-workspace.yaml      # Workspace package globs
+└── tsconfig.base.json       # Shared TypeScript config
 ```
 
-## Development
+---
 
-### Setup
+## Development
 
 ```bash
 # Clone and install
@@ -209,33 +268,73 @@ git clone https://github.com/your-org/vtex-mcp-servers.git
 cd vtex-mcp-servers
 pnpm install
 
-# Build all packages
+# Build everything
 pnpm build
 
-# Run all tests
+# Run all 161 tests
 pnpm test
+
+# Lint and format
+pnpm lint
+pnpm format
 ```
 
-### Generate a new server
+### Generate a new server from an OpenAPI spec
 
 ```bash
-# Generate a server from an OpenAPI spec
-pnpm --filter @vtex-mcp/generator start -- \
+npx vtex-mcp-generator \
   --spec specs/my-api.json \
-  --output servers/my-api/ \
+  --output servers/my-api \
   --name "@vtex-mcp/my-api" \
   --server-name "VTEX My API"
 ```
 
-### Docker
+### Run all servers via Docker
 
 ```bash
-# Start all servers via docker-compose
-docker-compose up
+cp .env.example .env
+# Edit .env with your credentials
+docker compose up
 ```
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed development guidelines.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the full development guide.
+
+---
+
+## Testing
+
+The project uses **vitest** for unit tests and **fast-check** for property-based tests, covering 15 formal correctness properties.
+
+```bash
+pnpm test          # Run all 161 tests across all packages
+pnpm test --watch  # Watch mode for development
+```
+
+| Package | Tests | Coverage |
+|---|---|---|
+| `@vtex-mcp/shared` | 67 (8 unit + property test files) | Config, HTTP client, errors, validation, server factory |
+| `@vtex-mcp/generator` | 80 (6 unit + property test files) | Parser, schema converter, tool generator, package generator |
+| `@vtex-mcp/catalog-api` | 14 (integration tests) | JSON-RPC conformance, tools/list, error propagation, pagination |
+
+---
+
+## Contributing
+
+We welcome contributions. See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on:
+
+- Adding new MCP servers
+- Coding standards and naming conventions
+- Testing requirements (unit + property-based)
+- Pull request process
+
+---
+
+## Security
+
+If you discover a security vulnerability, please see [SECURITY.md](SECURITY.md) for responsible disclosure instructions. Do not open a public issue.
+
+---
 
 ## License
 
-[MIT](LICENSE)
+[MIT](LICENSE) — use it however you want.
