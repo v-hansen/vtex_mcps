@@ -103,6 +103,8 @@ export VTEX_APP_TOKEN=your-app-token
 
 > Mix and match — add as many servers as you need. Each one is independent.
 
+📖 **[Full client setup guide](docs/client-setup.md)** — Claude Desktop, Kiro, VS Code, Cursor, Windsurf, and HTTP transport.
+
 ---
 
 ## Running from Source (Custom Setup)
