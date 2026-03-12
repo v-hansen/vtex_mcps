@@ -5,7 +5,7 @@ const config = loadConfig();
 const httpClient = createHttpClient(config);
 
 export const server = createMcpServer({
-  name: "vtex-gift-card-api-mcp",
+  name: "vtex-giftcard-api-mcp",
   version: "1.0.0",
   tools: tools(httpClient),
 });
