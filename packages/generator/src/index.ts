@@ -10,27 +10,24 @@ export {
   type ParsedRequestBody,
   type ParsedResponse,
   type JSONSchema,
-} from "./parser.js";
+} from './parser.js';
 
-export { jsonSchemaToZod } from "./schema-converter.js";
+export { jsonSchemaToZod } from './schema-converter.js';
 
 export {
   operationToTool,
   type GeneratedTool,
   toSnakeCase,
   isPaginatedOperation,
-} from "./tool-generator.js";
+} from './tool-generator.js';
 
-export {
-  generatePackage,
-  type PackageGeneratorOptions,
-} from "./package-generator.js";
+export { generatePackage, type PackageGeneratorOptions } from './package-generator.js';
 
 // --- Convenience pipeline function ---
 
-import { parseOpenApiSpec } from "./parser.js";
-import { operationToTool } from "./tool-generator.js";
-import { generatePackage } from "./package-generator.js";
+import { parseOpenApiSpec } from './parser.js';
+import { operationToTool } from './tool-generator.js';
+import { generatePackage } from './package-generator.js';
 
 /**
  * Options for the end-to-end server generation pipeline.
@@ -50,9 +47,7 @@ export async function generateServer(options: GeneratorOptions): Promise<void> {
   const { specPath, outputDir, packageName, serverName } = options;
 
   // Derive apiGroupPrefix from package name: "@vtex-mcp/catalog-api" → "catalog"
-  const apiGroupPrefix = packageName
-    .replace(/^@vtex-mcp\//, "")
-    .replace(/-api$/, "");
+  const apiGroupPrefix = packageName.replace(/^@vtex-mcp\//, '').replace(/-api$/, '');
 
   const operations = await parseOpenApiSpec(specPath);
   const tools = operations.map((op) => operationToTool(op, apiGroupPrefix));

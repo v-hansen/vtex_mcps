@@ -1,5 +1,5 @@
-import SwaggerParser from "@apidevtools/swagger-parser";
-import type { OpenAPIV3 } from "openapi-types";
+import SwaggerParser from '@apidevtools/swagger-parser';
+import type { OpenAPIV3 } from 'openapi-types';
 
 // --- Exported Interfaces ---
 
@@ -7,7 +7,7 @@ export type JSONSchema = Record<string, unknown>;
 
 export interface ParsedParameter {
   name: string;
-  in: "path" | "query" | "header";
+  in: 'path' | 'query' | 'header';
   required: boolean;
   schema: JSONSchema;
   description?: string;
@@ -27,7 +27,7 @@ export interface ParsedResponse {
 
 export interface ParsedOperation {
   operationId: string;
-  method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+  method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
   path: string;
   summary: string;
   description?: string;
@@ -38,16 +38,12 @@ export interface ParsedOperation {
 
 // --- Internal Helpers ---
 
-const SUPPORTED_METHODS = new Set(["get", "post", "put", "patch", "delete"]);
+const SUPPORTED_METHODS = new Set(['get', 'post', 'put', 'patch', 'delete']);
 
 function isOpenAPIV3(
   doc: Record<string, unknown>,
 ): doc is OpenAPIV3.Document & Record<string, unknown> {
-  return (
-    "openapi" in doc &&
-    typeof doc.openapi === "string" &&
-    doc.openapi.startsWith("3.")
-  );
+  return 'openapi' in doc && typeof doc.openapi === 'string' && doc.openapi.startsWith('3.');
 }
 
 function extractParameters(
@@ -56,14 +52,14 @@ function extractParameters(
   if (!params) return [];
 
   return params
-    .filter((p): p is OpenAPIV3.ParameterObject => !("$ref" in p))
-    .filter((p) => p.in === "path" || p.in === "query" || p.in === "header")
+    .filter((p): p is OpenAPIV3.ParameterObject => !('$ref' in p))
+    .filter((p) => p.in === 'path' || p.in === 'query' || p.in === 'header')
     .map((p) => {
       const param: ParsedParameter = {
         name: p.name,
-        in: p.in as "path" | "query" | "header",
+        in: p.in as 'path' | 'query' | 'header',
         required: p.required ?? false,
-        schema: (p.schema && !("$ref" in p.schema) ? p.schema : {}) as JSONSchema,
+        schema: (p.schema && !('$ref' in p.schema) ? p.schema : {}) as JSONSchema,
       };
       if (p.description) {
         param.description = p.description;
@@ -75,14 +71,11 @@ function extractParameters(
 function extractRequestBody(
   body: OpenAPIV3.ReferenceObject | OpenAPIV3.RequestBodyObject | undefined,
 ): ParsedRequestBody | undefined {
-  if (!body || "$ref" in body) return undefined;
+  if (!body || '$ref' in body) return undefined;
 
   const content = body.content;
   // Prefer application/json, fall back to first available content type
-  const contentType =
-    "application/json" in content
-      ? "application/json"
-      : Object.keys(content)[0];
+  const contentType = 'application/json' in content ? 'application/json' : Object.keys(content)[0];
 
   if (!contentType) return undefined;
 
@@ -92,7 +85,7 @@ function extractRequestBody(
   return {
     required: body.required ?? false,
     contentType,
-    schema: (schema && !("$ref" in schema) ? schema : {}) as JSONSchema,
+    schema: (schema && !('$ref' in schema) ? schema : {}) as JSONSchema,
   };
 }
 
@@ -104,7 +97,7 @@ function extractResponses(
   const result: Record<string, ParsedResponse> = {};
 
   for (const [statusCode, responseOrRef] of Object.entries(responses)) {
-    if (!responseOrRef || "$ref" in responseOrRef) continue;
+    if (!responseOrRef || '$ref' in responseOrRef) continue;
 
     const response = responseOrRef as OpenAPIV3.ResponseObject;
     const parsed: ParsedResponse = {
@@ -114,13 +107,13 @@ function extractResponses(
 
     if (response.content) {
       const contentType =
-        "application/json" in response.content
-          ? "application/json"
+        'application/json' in response.content
+          ? 'application/json'
           : Object.keys(response.content)[0];
 
       if (contentType) {
         const schema = response.content[contentType]?.schema;
-        if (schema && !("$ref" in schema)) {
+        if (schema && !('$ref' in schema)) {
           parsed.schema = schema as JSONSchema;
         }
       }
@@ -135,10 +128,10 @@ function extractResponses(
 function generateOperationId(method: string, path: string): string {
   // Convert "/api/catalog/pvt/product/{productId}" → "get_api_catalog_pvt_product_by_productId"
   const sanitized = path
-    .replace(/\{([^}]+)\}/g, "by_$1")
-    .replace(/[^a-zA-Z0-9]/g, "_")
-    .replace(/_+/g, "_")
-    .replace(/^_|_$/g, "");
+    .replace(/\{([^}]+)\}/g, 'by_$1')
+    .replace(/[^a-zA-Z0-9]/g, '_')
+    .replace(/_+/g, '_')
+    .replace(/^_|_$/g, '');
   return `${method}_${sanitized}`;
 }
 
@@ -148,15 +141,13 @@ function generateOperationId(method: string, path: string): string {
  * Parses an OpenAPI spec file, dereferences all $ref pointers,
  * and extracts all operations as ParsedOperation[].
  */
-export async function parseOpenApiSpec(
-  specPath: string,
-): Promise<ParsedOperation[]> {
+export async function parseOpenApiSpec(specPath: string): Promise<ParsedOperation[]> {
   const api = await SwaggerParser.dereference(specPath);
   const doc = api as Record<string, unknown>;
 
   if (!isOpenAPIV3(doc)) {
     throw new Error(
-      "Only OpenAPI 3.x specifications are supported. Received a Swagger 2.x or unknown format.",
+      'Only OpenAPI 3.x specifications are supported. Received a Swagger 2.x or unknown format.',
     );
   }
 
@@ -168,9 +159,7 @@ export async function parseOpenApiSpec(
 
     // Path-level parameters apply to all operations under this path
     const pathLevelParams = extractParameters(
-      pathItem.parameters as
-        | (OpenAPIV3.ReferenceObject | OpenAPIV3.ParameterObject)[]
-        | undefined,
+      pathItem.parameters as (OpenAPIV3.ReferenceObject | OpenAPIV3.ParameterObject)[] | undefined,
     );
 
     for (const method of Object.keys(pathItem)) {
@@ -181,8 +170,7 @@ export async function parseOpenApiSpec(
         | undefined;
       if (!operation) continue;
 
-      const operationId =
-        operation.operationId ?? generateOperationId(method, path);
+      const operationId = operation.operationId ?? generateOperationId(method, path);
 
       // Merge path-level and operation-level parameters (operation-level wins on conflict)
       const opParams = extractParameters(operation.parameters);
@@ -190,9 +178,9 @@ export async function parseOpenApiSpec(
 
       const parsed: ParsedOperation = {
         operationId,
-        method: method.toUpperCase() as ParsedOperation["method"],
+        method: method.toUpperCase() as ParsedOperation['method'],
         path,
-        summary: operation.summary ?? "",
+        summary: operation.summary ?? '',
         parameters: mergedParams,
         requestBody: extractRequestBody(operation.requestBody),
         responses: extractResponses(operation.responses),

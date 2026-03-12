@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import fc from "fast-check";
-import { VtexApiError, formatMcpError } from "../src/errors.js";
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import fc from 'fast-check';
+import { VtexApiError, formatMcpError } from '../src/errors.js';
 
 /**
  * Feature: vtex-mcp-servers
@@ -15,14 +15,12 @@ import { VtexApiError, formatMcpError } from "../src/errors.js";
 
 // Arbitrary for credential-like strings: non-empty, no whitespace-only,
 // printable ASCII to avoid regex edge cases in split/join sanitization.
-const credentialString = fc
-  .stringMatching(/^[a-zA-Z0-9_\-]{4,60}$/)
-  .filter((s) => s.length >= 4);
+const credentialString = fc.stringMatching(/^[a-zA-Z0-9_-]{4,60}$/).filter((s) => s.length >= 4);
 
 // Arbitrary for filler text around credentials
 const fillerText = fc.stringMatching(/^[a-zA-Z0-9 ]{1,40}$/);
 
-describe("Property 11: Credential Sanitization in Error Messages", () => {
+describe('Property 11: Credential Sanitization in Error Messages', () => {
   /** Validates: Requirements 7.5 */
 
   const originalEnv = process.env;
@@ -38,31 +36,26 @@ describe("Property 11: Credential Sanitization in Error Messages", () => {
     process.env = originalEnv;
   });
 
-  it("for any error containing appKey and appToken values, formatMcpError output must not contain those credential strings", () => {
+  it('for any error containing appKey and appToken values, formatMcpError output must not contain those credential strings', () => {
     fc.assert(
-      fc.property(
-        credentialString,
-        credentialString,
-        fillerText,
-        (appKey, appToken, filler) => {
-          process.env.VTEX_APP_KEY = appKey;
-          process.env.VTEX_APP_TOKEN = appToken;
-          delete process.env.VTEX_AUTH_TOKEN;
+      fc.property(credentialString, credentialString, fillerText, (appKey, appToken, filler) => {
+        process.env.VTEX_APP_KEY = appKey;
+        process.env.VTEX_APP_TOKEN = appToken;
+        delete process.env.VTEX_AUTH_TOKEN;
 
-          const errorMsg = `${filler} ${appKey} failed with ${appToken} ${filler}`;
-          const error = new Error(errorMsg);
-          const result = formatMcpError(error);
+        const errorMsg = `${filler} ${appKey} failed with ${appToken} ${filler}`;
+        const error = new Error(errorMsg);
+        const result = formatMcpError(error);
 
-          const outputText = result.content[0].text;
-          expect(outputText).not.toContain(appKey);
-          expect(outputText).not.toContain(appToken);
-        }
-      ),
-      { numRuns: 100 }
+        const outputText = result.content[0].text;
+        expect(outputText).not.toContain(appKey);
+        expect(outputText).not.toContain(appToken);
+      }),
+      { numRuns: 100 },
     );
   });
 
-  it("for any error containing authToken value, formatMcpError output must not contain that credential string", () => {
+  it('for any error containing authToken value, formatMcpError output must not contain that credential string', () => {
     fc.assert(
       fc.property(credentialString, fillerText, (authToken, filler) => {
         delete process.env.VTEX_APP_KEY;
@@ -76,11 +69,11 @@ describe("Property 11: Credential Sanitization in Error Messages", () => {
         const outputText = result.content[0].text;
         expect(outputText).not.toContain(authToken);
       }),
-      { numRuns: 100 }
+      { numRuns: 100 },
     );
   });
 
-  it("for any VtexApiError whose message embeds credential values, formatMcpError output must not contain those credentials", () => {
+  it('for any VtexApiError whose message embeds credential values, formatMcpError output must not contain those credentials', () => {
     fc.assert(
       fc.property(
         credentialString,
@@ -94,30 +87,26 @@ describe("Property 11: Credential Sanitization in Error Messages", () => {
 
           // Embed credentials in the vtexMessage field
           const vtexMessage = `key=${appKey} token=${appToken} auth=${authToken}`;
-          const error = new VtexApiError(
-            statusCode,
-            "GET /api/test",
-            vtexMessage
-          );
+          const error = new VtexApiError(statusCode, 'GET /api/test', vtexMessage);
           const result = formatMcpError(error);
 
           const outputText = result.content[0].text;
           expect(outputText).not.toContain(appKey);
           expect(outputText).not.toContain(appToken);
           expect(outputText).not.toContain(authToken);
-        }
+        },
       ),
-      { numRuns: 100 }
+      { numRuns: 100 },
     );
   });
 
-  it("for any error with all three credential types set, none appear in the output regardless of error type", () => {
+  it('for any error with all three credential types set, none appear in the output regardless of error type', () => {
     fc.assert(
       fc.property(
         credentialString,
         credentialString,
         credentialString,
-        fc.constantFrom("plain-error", "vtex-api-error", "timeout-error"),
+        fc.constantFrom('plain-error', 'vtex-api-error', 'timeout-error'),
         (appKey, appToken, authToken, errorType) => {
           process.env.VTEX_APP_KEY = appKey;
           process.env.VTEX_APP_TOKEN = appToken;
@@ -126,16 +115,17 @@ describe("Property 11: Credential Sanitization in Error Messages", () => {
           const credentialLaden = `${appKey} and ${appToken} and ${authToken}`;
           let error: unknown;
 
-          if (errorType === "plain-error") {
+          if (errorType === 'plain-error') {
             error = new Error(`Failure: ${credentialLaden}`);
-          } else if (errorType === "vtex-api-error") {
-            error = new VtexApiError(500, "POST /api/data", credentialLaden);
+          } else if (errorType === 'vtex-api-error') {
+            error = new VtexApiError(500, 'POST /api/data', credentialLaden);
           } else {
-            const timeoutErr = new Error(
-              `timeout ${credentialLaden}`
-            ) as Error & { isTimeout: boolean; endpoint: string };
+            const timeoutErr = new Error(`timeout ${credentialLaden}`) as Error & {
+              isTimeout: boolean;
+              endpoint: string;
+            };
             timeoutErr.isTimeout = true;
-            timeoutErr.endpoint = "/api/test";
+            timeoutErr.endpoint = '/api/test';
             error = timeoutErr;
           }
 
@@ -146,9 +136,9 @@ describe("Property 11: Credential Sanitization in Error Messages", () => {
           expect(outputText).not.toContain(appToken);
           expect(outputText).not.toContain(authToken);
           expect(result.isError).toBe(true);
-        }
+        },
       ),
-      { numRuns: 100 }
+      { numRuns: 100 },
     );
   });
 });

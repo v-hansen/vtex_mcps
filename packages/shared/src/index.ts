@@ -1,16 +1,16 @@
 // @vtex-mcp/shared — barrel export
 
 // Configuration
-export { VtexConfig, loadConfig } from "./config.js";
+export { VtexConfig, loadConfig } from './config.js';
 
 // HTTP Client
-export { createHttpClient } from "./http-client.js";
+export { createHttpClient } from './http-client.js';
 
 // Error Handling
-export { VtexApiError, formatMcpError } from "./errors.js";
+export { VtexApiError, formatMcpError } from './errors.js';
 
 // Validation
-export { validateParams } from "./validation.js";
+export { validateParams } from './validation.js';
 
 // Pagination
 export {
@@ -18,7 +18,7 @@ export {
   PaginatedResponse,
   DEFAULT_PAGE,
   DEFAULT_PAGE_SIZE,
-} from "./pagination.js";
+} from './pagination.js';
 
 // MCP Server Factory
 export {
@@ -26,4 +26,4 @@ export {
   ToolDefinition,
   ToolResult,
   McpServerInstance,
-} from "./server-factory.js";
+} from './server-factory.js';

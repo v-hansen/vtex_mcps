@@ -24,6 +24,7 @@ pnpm test
 ```
 
 Requirements:
+
 - Node.js >= 18
 - pnpm >= 8
 
@@ -81,9 +82,9 @@ Add a service entry with the next available port:
 ```yaml
 my-api:
   build: ./servers/my-api
-  command: ["--transport", "http", "--port", "3000"]
+  command: ['--transport', 'http', '--port', '3000']
   ports:
-    - "30XX:3000"
+    - '30XX:3000'
   env_file: .env
 ```
 
@@ -100,13 +101,13 @@ my-api:
 
 ### Naming Conventions
 
-| What | Convention | Example |
-|---|---|---|
-| MCP tool names | `{apiGroup}_{operationId}` snake_case | `catalog_get_product` |
-| npm packages | `@vtex-mcp/{api-group}` kebab-case | `@vtex-mcp/catalog-api` |
-| Server directories | `servers/{api-group}/` | `servers/catalog-api/` |
-| Test files (unit) | `{module}.test.ts` | `config.test.ts` |
-| Test files (property) | `{module}.property.test.ts` | `config.property.test.ts` |
+| What                  | Convention                            | Example                   |
+| --------------------- | ------------------------------------- | ------------------------- |
+| MCP tool names        | `{apiGroup}_{operationId}` snake_case | `catalog_get_product`     |
+| npm packages          | `@vtex-mcp/{api-group}` kebab-case    | `@vtex-mcp/catalog-api`   |
+| Server directories    | `servers/{api-group}/`                | `servers/catalog-api/`    |
+| Test files (unit)     | `{module}.test.ts`                    | `config.test.ts`          |
+| Test files (property) | `{module}.property.test.ts`           | `config.property.test.ts` |
 
 ### Linting and Formatting
 

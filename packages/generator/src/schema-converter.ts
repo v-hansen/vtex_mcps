@@ -1,4 +1,4 @@
-import type { JSONSchema } from "./parser.js";
+import type { JSONSchema } from './parser.js';
 
 function safeKey(name: string): string {
   if (/^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(name)) {
@@ -14,92 +14,91 @@ function safeKey(name: string): string {
  * string pattern/minLength/maxLength, nested objects, arrays, and default values.
  */
 export function jsonSchemaToZod(schema: JSONSchema): string {
-  if (!schema || typeof schema !== "object") {
-    return "z.unknown()";
+  if (!schema || typeof schema !== 'object') {
+    return 'z.unknown()';
   }
 
   // Handle enum at top level (before type check, since enum can appear with or without type)
   const enumValues = schema.enum as unknown[] | undefined;
   if (Array.isArray(enumValues) && enumValues.length > 0) {
-    if (enumValues.every((v) => typeof v === "string")) {
+    if (enumValues.every((v) => typeof v === 'string')) {
       return applyDefault(
-        `z.enum([${enumValues.map((v) => JSON.stringify(v)).join(", ")}])`,
+        `z.enum([${enumValues.map((v) => JSON.stringify(v)).join(', ')}])`,
         schema,
       );
     }
     // Non-string enums: use z.union of literals (filter out non-primitive values)
     const primitiveValues = enumValues.filter(
-      (v) => typeof v === "string" || typeof v === "number" || typeof v === "boolean" || v === null,
+      (v) => typeof v === 'string' || typeof v === 'number' || typeof v === 'boolean' || v === null,
     );
     if (primitiveValues.length === 0) {
-      return applyDefault("z.unknown()", schema);
+      return applyDefault('z.unknown()', schema);
     }
     const literals = primitiveValues.map((v) => `z.literal(${JSON.stringify(v)})`);
     if (literals.length === 1) {
       return applyDefault(literals[0], schema);
     }
-    return applyDefault(`z.union([${literals.join(", ")}])`, schema);
+    return applyDefault(`z.union([${literals.join(', ')}])`, schema);
   }
 
   const type = schema.type as string | string[] | undefined;
 
   // Handle union types (type as array)
   if (Array.isArray(type)) {
-    const types = type.filter((t) => t !== "null").map((t) =>
-      jsonSchemaToZod({ ...schema, type: t, enum: undefined }),
-    );
-    const hasNull = type.includes("null");
+    const types = type
+      .filter((t) => t !== 'null')
+      .map((t) => jsonSchemaToZod({ ...schema, type: t, enum: undefined }));
+    const hasNull = type.includes('null');
     if (types.length === 1) {
       return applyDefault(hasNull ? `${types[0]}.nullable()` : types[0], schema);
     }
-    const union = `z.union([${types.join(", ")}])`;
+    const union = `z.union([${types.join(', ')}])`;
     return applyDefault(hasNull ? `${union}.nullable()` : union, schema);
   }
 
   switch (type) {
-    case "string":
+    case 'string':
       return applyDefault(buildStringSchema(schema), schema);
 
-    case "number":
-      return applyDefault("z.number()", schema);
+    case 'number':
+      return applyDefault('z.number()', schema);
 
-    case "integer":
-      return applyDefault("z.number().int()", schema);
+    case 'integer':
+      return applyDefault('z.number().int()', schema);
 
-    case "boolean":
-      return applyDefault("z.boolean()", schema);
+    case 'boolean':
+      return applyDefault('z.boolean()', schema);
 
-    case "object":
+    case 'object':
       return applyDefault(buildObjectSchema(schema), schema);
 
-    case "array":
+    case 'array':
       return applyDefault(buildArraySchema(schema), schema);
 
-    case "null":
-      return "z.null()";
+    case 'null':
+      return 'z.null()';
 
     default:
       // No type specified — fallback to z.unknown()
-      return applyDefault("z.unknown()", schema);
+      return applyDefault('z.unknown()', schema);
   }
 }
 
-
 function buildStringSchema(schema: JSONSchema): string {
-  let code = "z.string()";
+  let code = 'z.string()';
 
   const minLength = schema.minLength as number | undefined;
-  if (typeof minLength === "number") {
+  if (typeof minLength === 'number') {
     code += `.min(${minLength})`;
   }
 
   const maxLength = schema.maxLength as number | undefined;
-  if (typeof maxLength === "number") {
+  if (typeof maxLength === 'number') {
     code += `.max(${maxLength})`;
   }
 
   const pattern = schema.pattern as string | undefined;
-  if (typeof pattern === "string") {
+  if (typeof pattern === 'string') {
     code += `.regex(/${pattern}/)`;
   }
 
@@ -109,7 +108,7 @@ function buildStringSchema(schema: JSONSchema): string {
 function buildObjectSchema(schema: JSONSchema): string {
   const properties = schema.properties as Record<string, JSONSchema> | undefined;
   if (!properties || Object.keys(properties).length === 0) {
-    return "z.object({})";
+    return 'z.object({})';
   }
 
   const requiredFields = new Set(
@@ -119,12 +118,12 @@ function buildObjectSchema(schema: JSONSchema): string {
   const entries = Object.entries(properties).map(([key, propSchema]) => {
     let propCode = jsonSchemaToZod(propSchema);
     if (!requiredFields.has(key)) {
-      propCode += ".optional()";
+      propCode += '.optional()';
     }
     return `${safeKey(key)}: ${propCode}`;
   });
 
-  return `z.object({ ${entries.join(", ")} })`;
+  return `z.object({ ${entries.join(', ')} })`;
 }
 
 function buildArraySchema(schema: JSONSchema): string {
@@ -132,7 +131,7 @@ function buildArraySchema(schema: JSONSchema): string {
   if (items) {
     return `z.array(${jsonSchemaToZod(items)})`;
   }
-  return "z.array(z.unknown())";
+  return 'z.array(z.unknown())';
 }
 
 function applyDefault(code: string, schema: JSONSchema): string {

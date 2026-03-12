@@ -1,8 +1,8 @@
-import { describe, it, expect } from "vitest";
-import fc from "fast-check";
-import { createHttpClient } from "../src/http-client.js";
-import type { VtexConfig } from "../src/config.js";
-import type { InternalAxiosRequestConfig } from "axios";
+import { describe, it, expect } from 'vitest';
+import fc from 'fast-check';
+import { createHttpClient } from '../src/http-client.js';
+import type { VtexConfig } from '../src/config.js';
+import type { InternalAxiosRequestConfig } from 'axios';
 
 /**
  * Feature: vtex-mcp-servers
@@ -22,30 +22,26 @@ const nonEmptyAlphanumeric = fc.stringMatching(/^[a-zA-Z0-9]{1,50}$/);
 
 // Arbitrary for valid VTEX environment names
 const vtexEnvironment = fc.constantFrom(
-  "vtexcommercestable",
-  "vtexcommercebeta",
-  "vtexcommerce",
-  "myvtex"
+  'vtexcommercestable',
+  'vtexcommercebeta',
+  'vtexcommerce',
+  'myvtex',
 );
 
 /**
  * Helper: runs a dummy request config through the client's request interceptor
  * chain and returns the resulting config with injected headers.
  */
-async function getInterceptedHeaders(
-  config: VtexConfig
-): Promise<Record<string, string>> {
+async function getInterceptedHeaders(config: VtexConfig): Promise<Record<string, string>> {
   const client = createHttpClient(config);
 
   // Access the registered request interceptor handlers
   const handlers = (client.interceptors.request as any).handlers as Array<{
-    fulfilled: (
-      config: InternalAxiosRequestConfig
-    ) => InternalAxiosRequestConfig;
+    fulfilled: (config: InternalAxiosRequestConfig) => InternalAxiosRequestConfig;
   }>;
 
   // Build a minimal request config to pass through the interceptor
-  const { AxiosHeaders } = await import("axios");
+  const { AxiosHeaders } = await import('axios');
   let reqConfig = {
     headers: new AxiosHeaders(),
   } as InternalAxiosRequestConfig;
@@ -62,7 +58,7 @@ async function getInterceptedHeaders(
   if (reqConfig.headers) {
     const raw = reqConfig.headers.toJSON() as Record<string, unknown>;
     for (const [key, value] of Object.entries(raw)) {
-      if (typeof value === "string") {
+      if (typeof value === 'string') {
         headers[key] = value;
       }
     }
@@ -70,10 +66,10 @@ async function getInterceptedHeaders(
   return headers;
 }
 
-describe("Property 10: Authentication Header Injection", () => {
+describe('Property 10: Authentication Header Injection', () => {
   /** Validates: Requirements 4.4, 4.6 */
 
-  it("for any config with appKey+appToken, headers contain X-VTEX-API-AppKey and X-VTEX-API-AppToken with matching values", () => {
+  it('for any config with appKey+appToken, headers contain X-VTEX-API-AppKey and X-VTEX-API-AppToken with matching values', () => {
     /** Validates: Requirements 4.4 */
     fc.assert(
       fc.asyncProperty(
@@ -91,17 +87,17 @@ describe("Property 10: Authentication Header Injection", () => {
 
           const headers = await getInterceptedHeaders(config);
 
-          expect(headers["x-vtex-api-appkey"]).toBe(appKey);
-          expect(headers["x-vtex-api-apptoken"]).toBe(appToken);
+          expect(headers['x-vtex-api-appkey']).toBe(appKey);
+          expect(headers['x-vtex-api-apptoken']).toBe(appToken);
           // Should NOT have authToken header
-          expect(headers["vtexidclientautcookie"]).toBeUndefined();
-        }
+          expect(headers['vtexidclientautcookie']).toBeUndefined();
+        },
       ),
-      { numRuns: 100 }
+      { numRuns: 100 },
     );
   });
 
-  it("for any config with authToken, headers contain VtexIdclientAutCookie with matching value", () => {
+  it('for any config with authToken, headers contain VtexIdclientAutCookie with matching value', () => {
     /** Validates: Requirements 4.6 */
     fc.assert(
       fc.asyncProperty(
@@ -117,17 +113,17 @@ describe("Property 10: Authentication Header Injection", () => {
 
           const headers = await getInterceptedHeaders(config);
 
-          expect(headers["vtexidclientautcookie"]).toBe(authToken);
+          expect(headers['vtexidclientautcookie']).toBe(authToken);
           // Should NOT have appKey/appToken headers
-          expect(headers["x-vtex-api-appkey"]).toBeUndefined();
-          expect(headers["x-vtex-api-apptoken"]).toBeUndefined();
-        }
+          expect(headers['x-vtex-api-appkey']).toBeUndefined();
+          expect(headers['x-vtex-api-apptoken']).toBeUndefined();
+        },
       ),
-      { numRuns: 100 }
+      { numRuns: 100 },
     );
   });
 
-  it("appKey+appToken takes precedence when both appKey+appToken and authToken are present", () => {
+  it('appKey+appToken takes precedence when both appKey+appToken and authToken are present', () => {
     /** Validates: Requirements 4.4, 4.6 */
     fc.assert(
       fc.asyncProperty(
@@ -148,13 +144,13 @@ describe("Property 10: Authentication Header Injection", () => {
           const headers = await getInterceptedHeaders(config);
 
           // appKey+appToken should take precedence
-          expect(headers["x-vtex-api-appkey"]).toBe(appKey);
-          expect(headers["x-vtex-api-apptoken"]).toBe(appToken);
+          expect(headers['x-vtex-api-appkey']).toBe(appKey);
+          expect(headers['x-vtex-api-apptoken']).toBe(appToken);
           // authToken header should NOT be set when appKey+appToken is present
-          expect(headers["vtexidclientautcookie"]).toBeUndefined();
-        }
+          expect(headers['vtexidclientautcookie']).toBeUndefined();
+        },
       ),
-      { numRuns: 100 }
+      { numRuns: 100 },
     );
   });
 });

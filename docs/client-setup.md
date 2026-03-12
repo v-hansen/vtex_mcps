@@ -174,12 +174,12 @@ You can add as many servers as you need — each one is independent:
 
 ## Environment Variables Reference
 
-| Variable | Required | Description |
-|---|---|---|
-| `VTEX_ACCOUNT_NAME` | Yes | Your VTEX account name |
-| `VTEX_APP_KEY` | Yes* | App key from VTEX License Manager |
-| `VTEX_APP_TOKEN` | Yes* | App token paired with the key |
-| `VTEX_AUTH_TOKEN` | No | User token (alternative to key/token pair) |
-| `VTEX_ENVIRONMENT` | No | API environment (default: `vtexcommercestable`) |
+| Variable            | Required | Description                                     |
+| ------------------- | -------- | ----------------------------------------------- |
+| `VTEX_ACCOUNT_NAME` | Yes      | Your VTEX account name                          |
+| `VTEX_APP_KEY`      | Yes\*    | App key from VTEX License Manager               |
+| `VTEX_APP_TOKEN`    | Yes\*    | App token paired with the key                   |
+| `VTEX_AUTH_TOKEN`   | No       | User token (alternative to key/token pair)      |
+| `VTEX_ENVIRONMENT`  | No       | API environment (default: `vtexcommercestable`) |
 
 \* Required unless `VTEX_AUTH_TOKEN` is provided.

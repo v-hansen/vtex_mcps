@@ -35,7 +35,7 @@ This project implements several security measures:
 
 ## Supported Versions
 
-| Version | Supported |
-|---|---|
-| Latest | Yes |
-| Older | Best effort |
+| Version | Supported   |
+| ------- | ----------- |
+| Latest  | Yes         |
+| Older   | Best effort |

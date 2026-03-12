@@ -1,5 +1,3 @@
-import type { VtexConfig } from "./config.js";
-
 /**
  * Structured error for VTEX API failures.
  */
@@ -11,7 +9,7 @@ export class VtexApiError extends Error {
     public retryAfter?: number,
   ) {
     super(`VTEX API error ${statusCode} on ${endpoint}: ${vtexMessage}`);
-    this.name = "VtexApiError";
+    this.name = 'VtexApiError';
   }
 }
 
@@ -23,7 +21,7 @@ function sanitizeCredentials(text: string): string {
 
   // Pull live credential values from the environment
   const secrets: string[] = [];
-  const envKeys = ["VTEX_APP_KEY", "VTEX_APP_TOKEN", "VTEX_AUTH_TOKEN"];
+  const envKeys = ['VTEX_APP_KEY', 'VTEX_APP_TOKEN', 'VTEX_AUTH_TOKEN'];
   for (const key of envKeys) {
     const val = process.env[key];
     if (val) {
@@ -34,7 +32,7 @@ function sanitizeCredentials(text: string): string {
   for (const secret of secrets) {
     // Only replace non-empty values that are long enough to be real credentials
     if (secret.length > 0) {
-      result = result.split(secret).join("[REDACTED]");
+      result = result.split(secret).join('[REDACTED]');
     }
   }
 
@@ -42,7 +40,7 @@ function sanitizeCredentials(text: string): string {
 }
 
 type McpErrorResult = {
-  content: Array<{ type: "text"; text: string }>;
+  content: Array<{ type: 'text'; text: string }>;
   isError: true;
 };
 
@@ -56,7 +54,7 @@ type McpErrorResult = {
  */
 export function formatMcpError(error: unknown): McpErrorResult {
   const makeResult = (text: string): McpErrorResult => ({
-    content: [{ type: "text" as const, text: sanitizeCredentials(text) }],
+    content: [{ type: 'text' as const, text: sanitizeCredentials(text) }],
     isError: true,
   });
 
@@ -72,15 +70,11 @@ export function formatMcpError(error: unknown): McpErrorResult {
     }
 
     if (statusCode === 429) {
-      const retryMsg = retryAfter != null ? ` Retry after ${retryAfter}s.` : "";
-      return makeResult(
-        `Rate limited by VTEX API (429) on ${endpoint}.${retryMsg}`,
-      );
+      const retryMsg = retryAfter != null ? ` Retry after ${retryAfter}s.` : '';
+      return makeResult(`Rate limited by VTEX API (429) on ${endpoint}.${retryMsg}`);
     }
 
-    return makeResult(
-      `VTEX API error ${statusCode} on ${endpoint}: ${vtexMessage}`,
-    );
+    return makeResult(`VTEX API error ${statusCode} on ${endpoint}: ${vtexMessage}`);
   }
 
   // Errors produced by the http-client response interceptor (duck-typed)
@@ -96,16 +90,16 @@ export function formatMcpError(error: unknown): McpErrorResult {
     // Timeout errors
     if (
       err.isTimeout ||
-      err.message?.includes("timeout") ||
-      err.message?.includes("ECONNABORTED")
+      err.message?.includes('timeout') ||
+      err.message?.includes('ECONNABORTED')
     ) {
-      const endpoint = err.endpoint ?? "unknown";
+      const endpoint = err.endpoint ?? 'unknown';
       return makeResult(`Request to ${endpoint} timed out after 30s.`);
     }
 
     // HTTP errors with status code (from http-client interceptor)
     if (err.statusCode != null) {
-      const endpoint = err.endpoint ?? "unknown";
+      const endpoint = err.endpoint ?? 'unknown';
       const vtexMessage = err.vtexMessage ?? err.message;
 
       if (err.statusCode === 401 || err.statusCode === 403) {
@@ -116,16 +110,11 @@ export function formatMcpError(error: unknown): McpErrorResult {
       }
 
       if (err.statusCode === 429) {
-        const retryMsg =
-          err.retryAfter != null ? ` Retry after ${err.retryAfter}s.` : "";
-        return makeResult(
-          `Rate limited by VTEX API (429) on ${endpoint}.${retryMsg}`,
-        );
+        const retryMsg = err.retryAfter != null ? ` Retry after ${err.retryAfter}s.` : '';
+        return makeResult(`Rate limited by VTEX API (429) on ${endpoint}.${retryMsg}`);
       }
 
-      return makeResult(
-        `VTEX API error ${err.statusCode} on ${endpoint}: ${vtexMessage}`,
-      );
+      return makeResult(`VTEX API error ${err.statusCode} on ${endpoint}: ${vtexMessage}`);
     }
 
     // Generic Error — sanitize and return
@@ -133,5 +122,5 @@ export function formatMcpError(error: unknown): McpErrorResult {
   }
 
   // Completely unknown error type
-  return makeResult("Internal error processing request.");
+  return makeResult('Internal error processing request.');
 }

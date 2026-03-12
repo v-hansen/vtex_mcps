@@ -1,59 +1,53 @@
-import type { ZodSchema, ZodError, ZodIssue } from "zod";
+import type { ZodSchema, ZodError, ZodIssue } from 'zod';
 
 /**
  * Formats a single Zod issue into a human-readable error message.
  */
 function formatIssue(issue: ZodIssue): string {
-  const path = issue.path.length > 0 ? issue.path.join(".") : undefined;
+  const path = issue.path.length > 0 ? issue.path.join('.') : undefined;
 
   switch (issue.code) {
-    case "invalid_type":
-      if (issue.received === "undefined") {
-        return path
-          ? `Missing required field: '${path}'`
-          : "Missing required value";
+    case 'invalid_type':
+      if (issue.received === 'undefined') {
+        return path ? `Missing required field: '${path}'` : 'Missing required value';
       }
       return path
         ? `Parameter '${path}' expected ${issue.expected}, got ${issue.received}`
         : `Expected ${issue.expected}, got ${issue.received}`;
 
-    case "invalid_enum_value":
+    case 'invalid_enum_value':
       return path
-        ? `Parameter '${path}' must be one of: ${(issue as any).options.join(", ")}`
-        : `Must be one of: ${(issue as any).options.join(", ")}`;
+        ? `Parameter '${path}' must be one of: ${(issue as any).options.join(', ')}`
+        : `Must be one of: ${(issue as any).options.join(', ')}`;
 
-    case "too_small": {
+    case 'too_small': {
       const min = (issue as any).minimum;
       const type = (issue as any).type;
-      if (type === "string") {
+      if (type === 'string') {
         return path
           ? `Parameter '${path}' must have at least ${min} character(s)`
           : `Must have at least ${min} character(s)`;
       }
-      return path
-        ? `Parameter '${path}' must be >= ${min}`
-        : `Must be >= ${min}`;
+      return path ? `Parameter '${path}' must be >= ${min}` : `Must be >= ${min}`;
     }
 
-    case "too_big": {
+    case 'too_big': {
       const max = (issue as any).maximum;
       const type = (issue as any).type;
-      if (type === "string") {
+      if (type === 'string') {
         return path
           ? `Parameter '${path}' must have at most ${max} character(s)`
           : `Must have at most ${max} character(s)`;
       }
-      return path
-        ? `Parameter '${path}' must be <= ${max}`
-        : `Must be <= ${max}`;
+      return path ? `Parameter '${path}' must be <= ${max}` : `Must be <= ${max}`;
     }
 
-    case "invalid_string": {
+    case 'invalid_string': {
       const validation = (issue as any).validation;
-      if (validation === "regex" || (typeof validation === "object" && "regex" in validation)) {
+      if (validation === 'regex' || (typeof validation === 'object' && 'regex' in validation)) {
         return path
           ? `Parameter '${path}' does not match required pattern`
-          : "Does not match required pattern";
+          : 'Does not match required pattern';
       }
       return path
         ? `Parameter '${path}': invalid string (${validation})`
@@ -61,9 +55,7 @@ function formatIssue(issue: ZodIssue): string {
     }
 
     default:
-      return path
-        ? `Parameter '${path}': ${issue.message}`
-        : issue.message;
+      return path ? `Parameter '${path}': ${issue.message}` : issue.message;
   }
 }
 

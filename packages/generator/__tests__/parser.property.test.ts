@@ -1,9 +1,9 @@
-import { describe, it, expect, afterEach } from "vitest";
-import fc from "fast-check";
-import { parseOpenApiSpec } from "../src/parser.js";
-import { writeFileSync, mkdirSync, rmSync } from "node:fs";
-import { join } from "node:path";
-import { tmpdir } from "node:os";
+import { describe, it, expect, afterEach } from 'vitest';
+import fc from 'fast-check';
+import { parseOpenApiSpec } from '../src/parser.js';
+import { writeFileSync, mkdirSync, rmSync } from 'node:fs';
+import { join } from 'node:path';
+import { tmpdir } from 'node:os';
 
 /**
  * Feature: vtex-mcp-servers
@@ -21,13 +21,10 @@ import { tmpdir } from "node:os";
 const tempDirs: string[] = [];
 
 function createTempSpec(spec: object): string {
-  const dir = join(
-    tmpdir(),
-    `parser-prop-${Date.now()}-${Math.random().toString(36).slice(2)}`,
-  );
+  const dir = join(tmpdir(), `parser-prop-${Date.now()}-${Math.random().toString(36).slice(2)}`);
   mkdirSync(dir, { recursive: true });
   tempDirs.push(dir);
-  const filePath = join(dir, "spec.json");
+  const filePath = join(dir, 'spec.json');
   writeFileSync(filePath, JSON.stringify(spec));
   return filePath;
 }
@@ -47,10 +44,7 @@ afterEach(() => {
 
 /** Alphanumeric operationId (must start with a letter) */
 const operationIdArb = fc
-  .tuple(
-    fc.stringMatching(/^[a-zA-Z]$/),
-    fc.stringMatching(/^[a-zA-Z0-9]{0,20}$/),
-  )
+  .tuple(fc.stringMatching(/^[a-zA-Z]$/), fc.stringMatching(/^[a-zA-Z0-9]{0,20}$/))
   .map(([first, rest]) => first + rest);
 
 /** Random path segment (plain or parameterized) */
@@ -62,27 +56,20 @@ const pathSegmentArb = fc.oneof(
 /** Random API path like /api/resource/{id} */
 const pathArb = fc
   .array(pathSegmentArb, { minLength: 1, maxLength: 4 })
-  .map((segments) => "/" + segments.join("/"));
+  .map((segments) => '/' + segments.join('/'));
 
 /** Supported HTTP methods */
-const methodArb = fc.constantFrom("get", "post", "put", "patch", "delete");
+const methodArb = fc.constantFrom('get', 'post', 'put', 'patch', 'delete');
 
 /** Simple JSON Schema type */
-const schemaTypeArb = fc.constantFrom("string", "integer", "number", "boolean");
+const schemaTypeArb = fc.constantFrom('string', 'integer', 'number', 'boolean');
 
 /** Parameter location */
-const paramInArb = fc.constantFrom("query", "header") as fc.Arbitrary<
-  "path" | "query" | "header"
->;
+const paramInArb = fc.constantFrom('query', 'header') as fc.Arbitrary<'path' | 'query' | 'header'>;
 
 /** A single query/header parameter */
 const parameterArb = fc
-  .tuple(
-    fc.stringMatching(/^[a-zA-Z]{1,12}$/),
-    paramInArb,
-    fc.boolean(),
-    schemaTypeArb,
-  )
+  .tuple(fc.stringMatching(/^[a-zA-Z]{1,12}$/), paramInArb, fc.boolean(), schemaTypeArb)
   .map(([name, location, required, type]) => ({
     name,
     in: location,
@@ -91,19 +78,17 @@ const parameterArb = fc
   }));
 
 /** HTTP response status code */
-const statusCodeArb = fc.constantFrom("200", "201", "204", "400", "404", "500");
+const statusCodeArb = fc.constantFrom('200', '201', '204', '400', '404', '500');
 
 /** A responses object */
-const responsesArb = fc
-  .array(statusCodeArb, { minLength: 1, maxLength: 3 })
-  .chain((codes) => {
-    const uniqueCodes = [...new Set(codes)];
-    const responses: Record<string, { description: string }> = {};
-    for (const code of uniqueCodes) {
-      responses[code] = { description: `Response ${code}` };
-    }
-    return fc.constant(responses);
-  });
+const responsesArb = fc.array(statusCodeArb, { minLength: 1, maxLength: 3 }).chain((codes) => {
+  const uniqueCodes = [...new Set(codes)];
+  const responses: Record<string, { description: string }> = {};
+  for (const code of uniqueCodes) {
+    responses[code] = { description: `Response ${code}` };
+  }
+  return fc.constant(responses);
+});
 
 /** A single OpenAPI operation */
 const operationArb = fc
@@ -121,37 +106,33 @@ const operationArb = fc
   }));
 
 /** A path item with one operation (method + operation) */
-const pathItemArb = fc
-  .tuple(pathArb, methodArb, operationArb)
-  .map(([path, method, operation]) => ({
-    path,
-    pathItem: { [method]: operation },
-  }));
+const pathItemArb = fc.tuple(pathArb, methodArb, operationArb).map(([path, method, operation]) => ({
+  path,
+  pathItem: { [method]: operation },
+}));
 
 /** A complete valid OpenAPI 3.x spec with 1-5 operations */
-const openApiSpecArb = fc
-  .array(pathItemArb, { minLength: 1, maxLength: 5 })
-  .map((items) => {
-    // Deduplicate paths — keep only the first occurrence of each path
-    const paths: Record<string, Record<string, unknown>> = {};
-    for (const { path, pathItem } of items) {
-      if (!paths[path]) {
-        paths[path] = pathItem;
-      }
+const openApiSpecArb = fc.array(pathItemArb, { minLength: 1, maxLength: 5 }).map((items) => {
+  // Deduplicate paths — keep only the first occurrence of each path
+  const paths: Record<string, Record<string, unknown>> = {};
+  for (const { path, pathItem } of items) {
+    if (!paths[path]) {
+      paths[path] = pathItem;
     }
-    return {
-      openapi: "3.0.3",
-      info: { title: "Generated Test API", version: "1.0.0" },
-      paths,
-    };
-  });
+  }
+  return {
+    openapi: '3.0.3',
+    info: { title: 'Generated Test API', version: '1.0.0' },
+    paths,
+  };
+});
 
 // --- Property Tests ---
 
-describe("Property 1: OpenAPI Spec Round-Trip Consistency", () => {
+describe('Property 1: OpenAPI Spec Round-Trip Consistency', () => {
   /** Validates: Requirements 2.5 */
 
-  it("parsing the same spec twice produces identical ParsedOperation arrays (deterministic)", async () => {
+  it('parsing the same spec twice produces identical ParsedOperation arrays (deterministic)', async () => {
     /** Validates: Requirements 2.5 */
     await fc.assert(
       fc.asyncProperty(openApiSpecArb, async (spec) => {
@@ -176,13 +157,7 @@ describe("Property 1: OpenAPI Spec Round-Trip Consistency", () => {
 
         // Count expected operations from the spec
         let expectedCount = 0;
-        const supportedMethods = new Set([
-          "get",
-          "post",
-          "put",
-          "patch",
-          "delete",
-        ]);
+        const supportedMethods = new Set(['get', 'post', 'put', 'patch', 'delete']);
         for (const pathItem of Object.values(
           spec.paths as Record<string, Record<string, unknown>>,
         )) {
@@ -197,9 +172,9 @@ describe("Property 1: OpenAPI Spec Round-Trip Consistency", () => {
     );
   });
 
-  it("every parsed operation has a non-empty operationId, valid method, and non-empty path", async () => {
+  it('every parsed operation has a non-empty operationId, valid method, and non-empty path', async () => {
     /** Validates: Requirements 2.5 */
-    const validMethods = new Set(["GET", "POST", "PUT", "PATCH", "DELETE"]);
+    const validMethods = new Set(['GET', 'POST', 'PUT', 'PATCH', 'DELETE']);
 
     await fc.assert(
       fc.asyncProperty(openApiSpecArb, async (spec) => {
@@ -209,7 +184,7 @@ describe("Property 1: OpenAPI Spec Round-Trip Consistency", () => {
         for (const op of operations) {
           expect(op.operationId.length).toBeGreaterThan(0);
           expect(validMethods.has(op.method)).toBe(true);
-          expect(op.path.startsWith("/")).toBe(true);
+          expect(op.path.startsWith('/')).toBe(true);
         }
       }),
       { numRuns: 100 },

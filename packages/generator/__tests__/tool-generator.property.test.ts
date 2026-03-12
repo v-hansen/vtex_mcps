@@ -1,7 +1,7 @@
-import { describe, it, expect } from "vitest";
-import fc from "fast-check";
-import { operationToTool, toSnakeCase } from "../src/tool-generator.js";
-import type { ParsedOperation, ParsedParameter, ParsedResponse } from "../src/parser.js";
+import { describe, it, expect } from 'vitest';
+import fc from 'fast-check';
+import { operationToTool, toSnakeCase } from '../src/tool-generator.js';
+import type { ParsedOperation, ParsedParameter, ParsedResponse } from '../src/parser.js';
 
 /**
  * Feature: vtex-mcp-servers
@@ -14,30 +14,24 @@ import type { ParsedOperation, ParsedParameter, ParsedResponse } from "../src/pa
 
 /** Alphanumeric identifier starting with a letter (camelCase-friendly) */
 const identifierArb = fc
-  .tuple(
-    fc.stringMatching(/^[a-z]$/),
-    fc.stringMatching(/^[a-zA-Z0-9]{0,20}$/),
-  )
+  .tuple(fc.stringMatching(/^[a-z]$/), fc.stringMatching(/^[a-zA-Z0-9]{0,20}$/))
   .map(([first, rest]) => first + rest);
 
 /** API group prefix (camelCase or simple lowercase) */
 const apiGroupArb = fc.oneof(
   fc.stringMatching(/^[a-z]{2,10}$/),
   fc
-    .tuple(
-      fc.stringMatching(/^[a-z]{2,8}$/),
-      fc.stringMatching(/^[A-Z][a-z]{1,6}$/),
-    )
+    .tuple(fc.stringMatching(/^[a-z]{2,8}$/), fc.stringMatching(/^[A-Z][a-z]{1,6}$/))
     .map(([a, b]) => a + b),
 );
 
 /** HTTP methods */
 const methodArb = fc.constantFrom(
-  "GET" as const,
-  "POST" as const,
-  "PUT" as const,
-  "PATCH" as const,
-  "DELETE" as const,
+  'GET' as const,
+  'POST' as const,
+  'PUT' as const,
+  'PATCH' as const,
+  'DELETE' as const,
 );
 
 /** Non-empty summary text */
@@ -53,27 +47,25 @@ const pathArb = fc
     fc.array(fc.stringMatching(/^[a-zA-Z]{2,10}$/), { minLength: 0, maxLength: 2 }),
   )
   .map(([segments, paramNames]) => {
-    const parts = segments.map((s) => "/" + s);
+    const parts = segments.map((s) => '/' + s);
     for (const p of paramNames) {
-      parts.push("/{" + p + "}");
+      parts.push('/{' + p + '}');
     }
-    return parts.join("");
+    return parts.join('');
   });
 
 /** JSON Schema type for parameters */
-const schemaTypeArb = fc.constantFrom("string", "integer", "number", "boolean");
+const schemaTypeArb = fc.constantFrom('string', 'integer', 'number', 'boolean');
 
 /** A path parameter */
-const pathParamArb = fc
-  .tuple(fc.stringMatching(/^[a-zA-Z]{2,12}$/), schemaTypeArb)
-  .map(
-    ([name, type]): ParsedParameter => ({
-      name,
-      in: "path",
-      required: true,
-      schema: { type },
-    }),
-  );
+const pathParamArb = fc.tuple(fc.stringMatching(/^[a-zA-Z]{2,12}$/), schemaTypeArb).map(
+  ([name, type]): ParsedParameter => ({
+    name,
+    in: 'path',
+    required: true,
+    schema: { type },
+  }),
+);
 
 /** A query parameter (may be required or optional, may have a default) */
 const queryParamArb = fc
@@ -81,32 +73,42 @@ const queryParamArb = fc
     fc.stringMatching(/^[a-zA-Z]{2,12}$/),
     schemaTypeArb,
     fc.boolean(),
-    fc.option(fc.oneof(fc.constant(1), fc.constant("default"), fc.constant(true)), { nil: undefined }),
+    fc.option(fc.oneof(fc.constant(1), fc.constant('default'), fc.constant(true)), {
+      nil: undefined,
+    }),
   )
   .map(
     ([name, type, required, defaultVal]): ParsedParameter => ({
       name,
-      in: "query",
+      in: 'query',
       required,
       schema: defaultVal !== undefined ? { type, default: defaultVal } : { type },
     }),
   );
 
 /** Error response codes (4xx, 5xx) */
-const errorCodeArb = fc.constantFrom("400", "401", "403", "404", "409", "422", "429", "500", "502", "503");
+const errorCodeArb = fc.constantFrom(
+  '400',
+  '401',
+  '403',
+  '404',
+  '409',
+  '422',
+  '429',
+  '500',
+  '502',
+  '503',
+);
 
 /** Success response codes */
-const successCodeArb = fc.constantFrom("200", "201", "204");
+const successCodeArb = fc.constantFrom('200', '201', '204');
 
 /** A responses object with at least one success and variable error codes */
 const responsesArb = fc
-  .tuple(
-    successCodeArb,
-    fc.uniqueArray(errorCodeArb, { minLength: 0, maxLength: 5 }),
-  )
+  .tuple(successCodeArb, fc.uniqueArray(errorCodeArb, { minLength: 0, maxLength: 5 }))
   .map(([successCode, errorCodes]) => {
     const responses: Record<string, ParsedResponse> = {};
-    responses[successCode] = { statusCode: successCode, description: "Success" };
+    responses[successCode] = { statusCode: successCode, description: 'Success' };
     for (const code of errorCodes) {
       responses[code] = { statusCode: code, description: `Error ${code}` };
     }
@@ -116,13 +118,13 @@ const responsesArb = fc
 /** Build a full ParsedOperation from parts */
 function buildOperation(opts: {
   operationId: string;
-  method: ParsedOperation["method"];
+  method: ParsedOperation['method'];
   path: string;
   summary: string;
   pathParams: ParsedParameter[];
   queryParams: ParsedParameter[];
   responses: Record<string, ParsedResponse>;
-  requestBody?: ParsedOperation["requestBody"];
+  requestBody?: ParsedOperation['requestBody'];
 }): ParsedOperation {
   return {
     operationId: opts.operationId,
@@ -137,10 +139,10 @@ function buildOperation(opts: {
 
 // --- Property 2: Tool Naming and Description from OpenAPI ---
 
-describe("Property 2: Tool Naming and Description from OpenAPI", () => {
+describe('Property 2: Tool Naming and Description from OpenAPI', () => {
   /** Validates: Requirements 2.3, 10.1, 10.2, 10.5 */
 
-  it("tool name follows {apiGroup}_{operationId} in snake_case", () => {
+  it('tool name follows {apiGroup}_{operationId} in snake_case', () => {
     /** Validates: Requirements 10.1 */
     fc.assert(
       fc.property(
@@ -157,7 +159,7 @@ describe("Property 2: Tool Naming and Description from OpenAPI", () => {
             summary,
             pathParams: [],
             queryParams: [],
-            responses: { "200": { statusCode: "200", description: "OK" } },
+            responses: { '200': { statusCode: '200', description: 'OK' } },
           });
 
           const tool = operationToTool(op, apiGroup);
@@ -171,7 +173,7 @@ describe("Property 2: Tool Naming and Description from OpenAPI", () => {
     );
   });
 
-  it("tool name is entirely lowercase with underscores", () => {
+  it('tool name is entirely lowercase with underscores', () => {
     /** Validates: Requirements 10.1 */
     fc.assert(
       fc.property(
@@ -188,7 +190,7 @@ describe("Property 2: Tool Naming and Description from OpenAPI", () => {
             summary,
             pathParams: [],
             queryParams: [],
-            responses: { "200": { statusCode: "200", description: "OK" } },
+            responses: { '200': { statusCode: '200', description: 'OK' } },
           });
 
           const tool = operationToTool(op, apiGroup);
@@ -199,7 +201,7 @@ describe("Property 2: Tool Naming and Description from OpenAPI", () => {
     );
   });
 
-  it("tool description contains the operation summary", () => {
+  it('tool description contains the operation summary', () => {
     /** Validates: Requirements 10.2 */
     fc.assert(
       fc.property(
@@ -216,7 +218,7 @@ describe("Property 2: Tool Naming and Description from OpenAPI", () => {
             summary,
             pathParams: [],
             queryParams: [],
-            responses: { "200": { statusCode: "200", description: "OK" } },
+            responses: { '200': { statusCode: '200', description: 'OK' } },
           });
 
           const tool = operationToTool(op, apiGroup);
@@ -227,7 +229,7 @@ describe("Property 2: Tool Naming and Description from OpenAPI", () => {
     );
   });
 
-  it("tool description contains METHOD and path", () => {
+  it('tool description contains METHOD and path', () => {
     /** Validates: Requirements 10.5 */
     fc.assert(
       fc.property(
@@ -244,7 +246,7 @@ describe("Property 2: Tool Naming and Description from OpenAPI", () => {
             summary,
             pathParams: [],
             queryParams: [],
-            responses: { "200": { statusCode: "200", description: "OK" } },
+            responses: { '200': { statusCode: '200', description: 'OK' } },
           });
 
           const tool = operationToTool(op, apiGroup);
@@ -258,10 +260,10 @@ describe("Property 2: Tool Naming and Description from OpenAPI", () => {
 
 // --- Property 3: Parameter Mapping Completeness ---
 
-describe("Property 3: Parameter Mapping Completeness", () => {
+describe('Property 3: Parameter Mapping Completeness', () => {
   /** Validates: Requirements 2.2, 10.3, 10.4 */
 
-  it("every path parameter appears in the input schema as required", () => {
+  it('every path parameter appears in the input schema as required', () => {
     /** Validates: Requirements 2.2, 10.3 */
     fc.assert(
       fc.property(
@@ -275,12 +277,12 @@ describe("Property 3: Parameter Mapping Completeness", () => {
         (apiGroup, operationId, pathParams) => {
           const op = buildOperation({
             operationId,
-            method: "GET",
-            path: "/api/" + pathParams.map((p) => `{${p.name}}`).join("/"),
-            summary: "Test",
+            method: 'GET',
+            path: '/api/' + pathParams.map((p) => `{${p.name}}`).join('/'),
+            summary: 'Test',
             pathParams,
             queryParams: [],
-            responses: { "200": { statusCode: "200", description: "OK" } },
+            responses: { '200': { statusCode: '200', description: 'OK' } },
           });
 
           const tool = operationToTool(op, apiGroup);
@@ -289,9 +291,7 @@ describe("Property 3: Parameter Mapping Completeness", () => {
             // The param name must appear in the schema code
             expect(tool.inputSchemaCode).toContain(`${param.name}:`);
             // Path params must NOT be optional
-            const paramRegex = new RegExp(
-              `${param.name}:\\s*[^,}]+\\.optional\\(\\)`,
-            );
+            const paramRegex = new RegExp(`${param.name}:\\s*[^,}]+\\.optional\\(\\)`);
             expect(tool.inputSchemaCode).not.toMatch(paramRegex);
           }
         },
@@ -300,7 +300,7 @@ describe("Property 3: Parameter Mapping Completeness", () => {
     );
   });
 
-  it("every query parameter appears in the input schema", () => {
+  it('every query parameter appears in the input schema', () => {
     /** Validates: Requirements 2.2 */
     fc.assert(
       fc.property(
@@ -314,12 +314,12 @@ describe("Property 3: Parameter Mapping Completeness", () => {
         (apiGroup, operationId, queryParams) => {
           const op = buildOperation({
             operationId,
-            method: "GET",
-            path: "/api/test",
-            summary: "Test",
+            method: 'GET',
+            path: '/api/test',
+            summary: 'Test',
             pathParams: [],
             queryParams,
-            responses: { "200": { statusCode: "200", description: "OK" } },
+            responses: { '200': { statusCode: '200', description: 'OK' } },
           });
 
           const tool = operationToTool(op, apiGroup);
@@ -333,7 +333,7 @@ describe("Property 3: Parameter Mapping Completeness", () => {
     );
   });
 
-  it("optional query params without defaults are marked optional", () => {
+  it('optional query params without defaults are marked optional', () => {
     /** Validates: Requirements 10.3 */
     fc.assert(
       fc.property(
@@ -344,35 +344,35 @@ describe("Property 3: Parameter Mapping Completeness", () => {
         (apiGroup, operationId, paramName, schemaType) => {
           const queryParam: ParsedParameter = {
             name: paramName,
-            in: "query",
+            in: 'query',
             required: false,
             schema: { type: schemaType },
           };
 
           const op = buildOperation({
             operationId,
-            method: "GET",
-            path: "/api/test",
-            summary: "Test",
+            method: 'GET',
+            path: '/api/test',
+            summary: 'Test',
             pathParams: [],
             queryParams: [queryParam],
-            responses: { "200": { statusCode: "200", description: "OK" } },
+            responses: { '200': { statusCode: '200', description: 'OK' } },
           });
 
           const tool = operationToTool(op, apiGroup);
 
           // Extract the line for this param
-          const lines = tool.inputSchemaCode.split("\n");
+          const lines = tool.inputSchemaCode.split('\n');
           const paramLine = lines.find((l) => l.trimStart().startsWith(`${paramName}:`));
           expect(paramLine).toBeDefined();
-          expect(paramLine).toContain(".optional()");
+          expect(paramLine).toContain('.optional()');
         },
       ),
       { numRuns: 100 },
     );
   });
 
-  it("query params with default values preserve the default", () => {
+  it('query params with default values preserve the default', () => {
     /** Validates: Requirements 10.4 */
     fc.assert(
       fc.property(
@@ -383,19 +383,19 @@ describe("Property 3: Parameter Mapping Completeness", () => {
         (apiGroup, operationId, paramName, defaultVal) => {
           const queryParam: ParsedParameter = {
             name: paramName,
-            in: "query",
+            in: 'query',
             required: false,
-            schema: { type: "integer", default: defaultVal },
+            schema: { type: 'integer', default: defaultVal },
           };
 
           const op = buildOperation({
             operationId,
-            method: "GET",
-            path: "/api/test",
-            summary: "Test",
+            method: 'GET',
+            path: '/api/test',
+            summary: 'Test',
             pathParams: [],
             queryParams: [queryParam],
-            responses: { "200": { statusCode: "200", description: "OK" } },
+            responses: { '200': { statusCode: '200', description: 'OK' } },
           });
 
           const tool = operationToTool(op, apiGroup);
@@ -407,37 +407,37 @@ describe("Property 3: Parameter Mapping Completeness", () => {
     );
   });
 
-  it("request body appears in the input schema when present", () => {
+  it('request body appears in the input schema when present', () => {
     /** Validates: Requirements 2.2 */
     fc.assert(
       fc.property(
         apiGroupArb,
         identifierArb,
-        fc.constantFrom("POST" as const, "PUT" as const, "PATCH" as const),
+        fc.constantFrom('POST' as const, 'PUT' as const, 'PATCH' as const),
         fc.boolean(),
         (apiGroup, operationId, method, bodyRequired) => {
           const op = buildOperation({
             operationId,
             method,
-            path: "/api/test",
-            summary: "Test",
+            path: '/api/test',
+            summary: 'Test',
             pathParams: [],
             queryParams: [],
-            responses: { "200": { statusCode: "200", description: "OK" } },
+            responses: { '200': { statusCode: '200', description: 'OK' } },
             requestBody: {
               required: bodyRequired,
-              contentType: "application/json",
+              contentType: 'application/json',
               schema: {
-                type: "object",
-                properties: { name: { type: "string" } },
-                required: ["name"],
+                type: 'object',
+                properties: { name: { type: 'string' } },
+                required: ['name'],
               },
             },
           });
 
           const tool = operationToTool(op, apiGroup);
 
-          expect(tool.inputSchemaCode).toContain("body:");
+          expect(tool.inputSchemaCode).toContain('body:');
           if (!bodyRequired) {
             expect(tool.inputSchemaCode).toMatch(/body:.*\.optional\(\)/);
           }
@@ -447,13 +447,13 @@ describe("Property 3: Parameter Mapping Completeness", () => {
     );
   });
 
-  it("correct Zod type is generated for each schema type", () => {
+  it('correct Zod type is generated for each schema type', () => {
     /** Validates: Requirements 2.2 */
     const typeToZod: Record<string, string> = {
-      string: "z.string()",
-      integer: "z.number().int()",
-      number: "z.number()",
-      boolean: "z.boolean()",
+      string: 'z.string()',
+      integer: 'z.number().int()',
+      number: 'z.number()',
+      boolean: 'z.boolean()',
     };
 
     fc.assert(
@@ -465,19 +465,19 @@ describe("Property 3: Parameter Mapping Completeness", () => {
         (apiGroup, operationId, paramName, schemaType) => {
           const pathParam: ParsedParameter = {
             name: paramName,
-            in: "path",
+            in: 'path',
             required: true,
             schema: { type: schemaType },
           };
 
           const op = buildOperation({
             operationId,
-            method: "GET",
+            method: 'GET',
             path: `/api/{${paramName}}`,
-            summary: "Test",
+            summary: 'Test',
             pathParams: [pathParam],
             queryParams: [],
-            responses: { "200": { statusCode: "200", description: "OK" } },
+            responses: { '200': { statusCode: '200', description: 'OK' } },
           });
 
           const tool = operationToTool(op, apiGroup);
@@ -492,10 +492,10 @@ describe("Property 3: Parameter Mapping Completeness", () => {
 
 // --- Property 4: Error Response Code Coverage in Generation ---
 
-describe("Property 4: Error Response Code Coverage in Generation", () => {
+describe('Property 4: Error Response Code Coverage in Generation', () => {
   /** Validates: Requirements 2.4 */
 
-  it("every documented error response code has handling logic in the handler", () => {
+  it('every documented error response code has handling logic in the handler', () => {
     /** Validates: Requirements 2.4 */
     fc.assert(
       fc.property(
@@ -504,14 +504,14 @@ describe("Property 4: Error Response Code Coverage in Generation", () => {
         methodArb,
         pathArb,
         responsesArb.filter((r) =>
-          Object.keys(r).some((c) => c.startsWith("4") || c.startsWith("5")),
+          Object.keys(r).some((c) => c.startsWith('4') || c.startsWith('5')),
         ),
         (apiGroup, operationId, method, path, responses) => {
           const op = buildOperation({
             operationId,
             method,
             path,
-            summary: "Test",
+            summary: 'Test',
             pathParams: [],
             queryParams: [],
             responses,
@@ -520,7 +520,7 @@ describe("Property 4: Error Response Code Coverage in Generation", () => {
           const tool = operationToTool(op, apiGroup);
 
           const errorCodes = Object.keys(responses).filter(
-            (code) => code.startsWith("4") || code.startsWith("5"),
+            (code) => code.startsWith('4') || code.startsWith('5'),
           );
 
           for (const code of errorCodes) {
@@ -532,7 +532,7 @@ describe("Property 4: Error Response Code Coverage in Generation", () => {
     );
   });
 
-  it("error handler includes the description for each error code", () => {
+  it('error handler includes the description for each error code', () => {
     /** Validates: Requirements 2.4 */
     fc.assert(
       fc.property(
@@ -543,7 +543,7 @@ describe("Property 4: Error Response Code Coverage in Generation", () => {
         fc.uniqueArray(errorCodeArb, { minLength: 1, maxLength: 4 }),
         (apiGroup, operationId, method, path, errorCodes) => {
           const responses: Record<string, ParsedResponse> = {
-            "200": { statusCode: "200", description: "OK" },
+            '200': { statusCode: '200', description: 'OK' },
           };
           for (const code of errorCodes) {
             responses[code] = {
@@ -556,7 +556,7 @@ describe("Property 4: Error Response Code Coverage in Generation", () => {
             operationId,
             method,
             path,
-            summary: "Test",
+            summary: 'Test',
             pathParams: [],
             queryParams: [],
             responses,
@@ -573,7 +573,7 @@ describe("Property 4: Error Response Code Coverage in Generation", () => {
     );
   });
 
-  it("handler has no error switch when only success responses exist", () => {
+  it('handler has no error switch when only success responses exist', () => {
     /** Validates: Requirements 2.4 */
     fc.assert(
       fc.property(
@@ -584,14 +584,14 @@ describe("Property 4: Error Response Code Coverage in Generation", () => {
         successCodeArb,
         (apiGroup, operationId, method, path, successCode) => {
           const responses: Record<string, ParsedResponse> = {
-            [successCode]: { statusCode: successCode, description: "Success" },
+            [successCode]: { statusCode: successCode, description: 'Success' },
           };
 
           const op = buildOperation({
             operationId,
             method,
             path,
-            summary: "Test",
+            summary: 'Test',
             pathParams: [],
             queryParams: [],
             responses,
@@ -600,7 +600,7 @@ describe("Property 4: Error Response Code Coverage in Generation", () => {
           const tool = operationToTool(op, apiGroup);
 
           // No switch statement when there are no error codes
-          expect(tool.handlerCode).not.toContain("switch");
+          expect(tool.handlerCode).not.toContain('switch');
         },
       ),
       { numRuns: 100 },

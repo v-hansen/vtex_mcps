@@ -1,7 +1,7 @@
 ---
 name: Bug Report
 about: Report a bug in a VTEX MCP server or the shared library
-title: "[Bug] "
+title: '[Bug] '
 labels: bug
 assignees: ''
 ---

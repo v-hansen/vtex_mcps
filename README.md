@@ -46,7 +46,6 @@ export VTEX_APP_TOKEN=your-app-token
 
 ### 3. Connect your AI client
 
-
 **Claude Desktop** — add to `claude_desktop_config.json`:
 
 ```json
@@ -145,6 +144,7 @@ Then point your MCP client to the local path instead of `npx`:
 ```
 
 This is useful if you want to:
+
 - Customize tool behavior or add custom tools
 - Use a private fork with internal modifications
 - Test changes before publishing
@@ -171,13 +171,13 @@ pnpm build --filter @vtex-mcp/catalog-api
 
 ## Authentication
 
-| Variable | Required | Description |
-|---|---|---|
-| `VTEX_ACCOUNT_NAME` | Yes | Your VTEX account name |
-| `VTEX_APP_KEY` | Yes* | App key from VTEX License Manager |
-| `VTEX_APP_TOKEN` | Yes* | App token paired with the key |
-| `VTEX_AUTH_TOKEN` | No | User token (alternative to key/token pair) |
-| `VTEX_ENVIRONMENT` | No | API environment (default: `vtexcommercestable`) |
+| Variable            | Required | Description                                     |
+| ------------------- | -------- | ----------------------------------------------- |
+| `VTEX_ACCOUNT_NAME` | Yes      | Your VTEX account name                          |
+| `VTEX_APP_KEY`      | Yes\*    | App key from VTEX License Manager               |
+| `VTEX_APP_TOKEN`    | Yes\*    | App token paired with the key                   |
+| `VTEX_AUTH_TOKEN`   | No       | User token (alternative to key/token pair)      |
+| `VTEX_ENVIRONMENT`  | No       | API environment (default: `vtexcommercestable`) |
 
 \* Required unless `VTEX_AUTH_TOKEN` is provided.
 
@@ -187,10 +187,10 @@ pnpm build --filter @vtex-mcp/catalog-api
 
 Every server supports two transport modes:
 
-| Mode | Flag | Use Case |
-|---|---|---|
-| **stdio** (default) | `--transport stdio` | Local MCP clients (Claude Desktop, Cursor, Kiro) |
-| **HTTP/SSE** | `--transport http --port 3000` | Remote deployment, multi-client scenarios |
+| Mode                | Flag                           | Use Case                                         |
+| ------------------- | ------------------------------ | ------------------------------------------------ |
+| **stdio** (default) | `--transport stdio`            | Local MCP clients (Claude Desktop, Cursor, Kiro) |
+| **HTTP/SSE**        | `--transport http --port 3000` | Remote deployment, multi-client scenarios        |
 
 ```bash
 # stdio (default)
@@ -207,51 +207,51 @@ npx @vtex-mcp/orders-api --transport http --port 8080
 <details>
 <summary><strong>43 servers — click to expand full list</strong></summary>
 
-| Server | Package | Tools |
-|---|---|---|
-| Antifraud Provider | [`@vtex-mcp/antifraud-provider-api`](https://www.npmjs.com/package/@vtex-mcp/antifraud-provider-api) | Antifraud provider integration |
-| Brand | [`@vtex-mcp/brand-api`](https://www.npmjs.com/package/@vtex-mcp/brand-api) | Brand management |
-| Catalog | [`@vtex-mcp/catalog-api`](https://www.npmjs.com/package/@vtex-mcp/catalog-api) | Products, SKUs, categories, specs (193 tools) |
-| Category | [`@vtex-mcp/category-api`](https://www.npmjs.com/package/@vtex-mcp/category-api) | Category tree management |
-| Checkout | [`@vtex-mcp/checkout-api`](https://www.npmjs.com/package/@vtex-mcp/checkout-api) | Cart and checkout operations |
-| CMS (Legacy) | [`@vtex-mcp/cms-legacy-portal-api`](https://www.npmjs.com/package/@vtex-mcp/cms-legacy-portal-api) | Legacy CMS portal |
-| Collection (Beta) | [`@vtex-mcp/collection-beta-api`](https://www.npmjs.com/package/@vtex-mcp/collection-beta-api) | Product collections |
-| Customer Credit | [`@vtex-mcp/customer-credit-api`](https://www.npmjs.com/package/@vtex-mcp/customer-credit-api) | Customer credit management |
-| Gift Card | [`@vtex-mcp/giftcard-api`](https://www.npmjs.com/package/@vtex-mcp/giftcard-api) | Gift card operations |
-| Gift Card Hub | [`@vtex-mcp/giftcard-hub-api`](https://www.npmjs.com/package/@vtex-mcp/giftcard-hub-api) | Gift card hub integration |
-| Gift Card Provider | [`@vtex-mcp/giftcard-provider-protocol`](https://www.npmjs.com/package/@vtex-mcp/giftcard-provider-protocol) | Gift card provider protocol |
-| Headless CMS | [`@vtex-mcp/headless-cms-api`](https://www.npmjs.com/package/@vtex-mcp/headless-cms-api) | Headless CMS content |
-| Intelligent Search Events | [`@vtex-mcp/intelligent-search-events-api`](https://www.npmjs.com/package/@vtex-mcp/intelligent-search-events-api) | Search analytics |
-| Inventory | [`@vtex-mcp/inventory-api`](https://www.npmjs.com/package/@vtex-mcp/inventory-api) | Inventory management |
-| License Manager | [`@vtex-mcp/license-manager-api`](https://www.npmjs.com/package/@vtex-mcp/license-manager-api) | Users, roles, permissions |
-| Logistics | [`@vtex-mcp/logistics-api`](https://www.npmjs.com/package/@vtex-mcp/logistics-api) | Shipping and logistics |
-| Marketplace | [`@vtex-mcp/marketplace-api`](https://www.npmjs.com/package/@vtex-mcp/marketplace-api) | Marketplace operations |
-| Master Data v2 | [`@vtex-mcp/master-data-api-v2`](https://www.npmjs.com/package/@vtex-mcp/master-data-api-v2) | Master Data v2 |
-| Master Data v10 | [`@vtex-mcp/master-data-api-v10`](https://www.npmjs.com/package/@vtex-mcp/master-data-api-v10) | Master Data v10.2 |
-| Message Center | [`@vtex-mcp/message-center-api`](https://www.npmjs.com/package/@vtex-mcp/message-center-api) | Transactional messages |
-| Orders | [`@vtex-mcp/orders-api`](https://www.npmjs.com/package/@vtex-mcp/orders-api) | Order management |
-| Payment Provider | [`@vtex-mcp/payment-provider-protocol`](https://www.npmjs.com/package/@vtex-mcp/payment-provider-protocol) | Payment provider integration |
-| Payments | [`@vtex-mcp/payments-api`](https://www.npmjs.com/package/@vtex-mcp/payments-api) | Payment transactions |
-| Payments Gateway | [`@vtex-mcp/payments-gateway-api`](https://www.npmjs.com/package/@vtex-mcp/payments-gateway-api) | Payment gateway |
-| Pickup Points | [`@vtex-mcp/pickup-points-api`](https://www.npmjs.com/package/@vtex-mcp/pickup-points-api) | Pickup point management |
-| Policies System | [`@vtex-mcp/policies-system-api`](https://www.npmjs.com/package/@vtex-mcp/policies-system-api) | Policy management |
-| Pricing | [`@vtex-mcp/pricing-api`](https://www.npmjs.com/package/@vtex-mcp/pricing-api) | Price management |
-| Promotions & Taxes | [`@vtex-mcp/promotions-and-taxes-api`](https://www.npmjs.com/package/@vtex-mcp/promotions-and-taxes-api) | Promotions and tax rules |
-| Rates and Benefits | [`@vtex-mcp/rates-and-benefits-api`](https://www.npmjs.com/package/@vtex-mcp/rates-and-benefits-api) | Rates and benefits |
-| Returns | [`@vtex-mcp/returns-api`](https://www.npmjs.com/package/@vtex-mcp/returns-api) | Return invoices and order return info |
-| Reviews and Ratings | [`@vtex-mcp/reviews-and-ratings-api`](https://www.npmjs.com/package/@vtex-mcp/reviews-and-ratings-api) | Product reviews |
-| Search | [`@vtex-mcp/search-api`](https://www.npmjs.com/package/@vtex-mcp/search-api) | VTEX Intelligent Search |
-| Session Manager | [`@vtex-mcp/session-manager-api`](https://www.npmjs.com/package/@vtex-mcp/session-manager-api) | Session management |
-| Shipping Network | [`@vtex-mcp/shipping-network-api`](https://www.npmjs.com/package/@vtex-mcp/shipping-network-api) | Shipping carriers |
-| SKU Bindings | [`@vtex-mcp/sku-bindings-api`](https://www.npmjs.com/package/@vtex-mcp/sku-bindings-api) | SKU binding management |
-| Specification | [`@vtex-mcp/specification-api`](https://www.npmjs.com/package/@vtex-mcp/specification-api) | Product specifications |
-| Subscriptions | [`@vtex-mcp/subscriptions-api`](https://www.npmjs.com/package/@vtex-mcp/subscriptions-api) | Subscription management |
-| Suggestions | [`@vtex-mcp/suggestions-api`](https://www.npmjs.com/package/@vtex-mcp/suggestions-api) | Marketplace suggestions |
-| Tax Service Provider | [`@vtex-mcp/tax-service-provider-protocol`](https://www.npmjs.com/package/@vtex-mcp/tax-service-provider-protocol) | Tax service provider protocol |
-| Tracking | [`@vtex-mcp/tracking-api`](https://www.npmjs.com/package/@vtex-mcp/tracking-api) | Order tracking |
-| VTEX DO | [`@vtex-mcp/vtex-do-api`](https://www.npmjs.com/package/@vtex-mcp/vtex-do-api) | Task management |
-| VTEX ID | [`@vtex-mcp/vtex-id-api`](https://www.npmjs.com/package/@vtex-mcp/vtex-id-api) | Authentication and identity |
-| Warehouse | [`@vtex-mcp/warehouse-api`](https://www.npmjs.com/package/@vtex-mcp/warehouse-api) | Warehouse management |
+| Server                    | Package                                                                                                            | Tools                                         |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------ | --------------------------------------------- |
+| Antifraud Provider        | [`@vtex-mcp/antifraud-provider-api`](https://www.npmjs.com/package/@vtex-mcp/antifraud-provider-api)               | Antifraud provider integration                |
+| Brand                     | [`@vtex-mcp/brand-api`](https://www.npmjs.com/package/@vtex-mcp/brand-api)                                         | Brand management                              |
+| Catalog                   | [`@vtex-mcp/catalog-api`](https://www.npmjs.com/package/@vtex-mcp/catalog-api)                                     | Products, SKUs, categories, specs (193 tools) |
+| Category                  | [`@vtex-mcp/category-api`](https://www.npmjs.com/package/@vtex-mcp/category-api)                                   | Category tree management                      |
+| Checkout                  | [`@vtex-mcp/checkout-api`](https://www.npmjs.com/package/@vtex-mcp/checkout-api)                                   | Cart and checkout operations                  |
+| CMS (Legacy)              | [`@vtex-mcp/cms-legacy-portal-api`](https://www.npmjs.com/package/@vtex-mcp/cms-legacy-portal-api)                 | Legacy CMS portal                             |
+| Collection (Beta)         | [`@vtex-mcp/collection-beta-api`](https://www.npmjs.com/package/@vtex-mcp/collection-beta-api)                     | Product collections                           |
+| Customer Credit           | [`@vtex-mcp/customer-credit-api`](https://www.npmjs.com/package/@vtex-mcp/customer-credit-api)                     | Customer credit management                    |
+| Gift Card                 | [`@vtex-mcp/giftcard-api`](https://www.npmjs.com/package/@vtex-mcp/giftcard-api)                                   | Gift card operations                          |
+| Gift Card Hub             | [`@vtex-mcp/giftcard-hub-api`](https://www.npmjs.com/package/@vtex-mcp/giftcard-hub-api)                           | Gift card hub integration                     |
+| Gift Card Provider        | [`@vtex-mcp/giftcard-provider-protocol`](https://www.npmjs.com/package/@vtex-mcp/giftcard-provider-protocol)       | Gift card provider protocol                   |
+| Headless CMS              | [`@vtex-mcp/headless-cms-api`](https://www.npmjs.com/package/@vtex-mcp/headless-cms-api)                           | Headless CMS content                          |
+| Intelligent Search Events | [`@vtex-mcp/intelligent-search-events-api`](https://www.npmjs.com/package/@vtex-mcp/intelligent-search-events-api) | Search analytics                              |
+| Inventory                 | [`@vtex-mcp/inventory-api`](https://www.npmjs.com/package/@vtex-mcp/inventory-api)                                 | Inventory management                          |
+| License Manager           | [`@vtex-mcp/license-manager-api`](https://www.npmjs.com/package/@vtex-mcp/license-manager-api)                     | Users, roles, permissions                     |
+| Logistics                 | [`@vtex-mcp/logistics-api`](https://www.npmjs.com/package/@vtex-mcp/logistics-api)                                 | Shipping and logistics                        |
+| Marketplace               | [`@vtex-mcp/marketplace-api`](https://www.npmjs.com/package/@vtex-mcp/marketplace-api)                             | Marketplace operations                        |
+| Master Data v2            | [`@vtex-mcp/master-data-api-v2`](https://www.npmjs.com/package/@vtex-mcp/master-data-api-v2)                       | Master Data v2                                |
+| Master Data v10           | [`@vtex-mcp/master-data-api-v10`](https://www.npmjs.com/package/@vtex-mcp/master-data-api-v10)                     | Master Data v10.2                             |
+| Message Center            | [`@vtex-mcp/message-center-api`](https://www.npmjs.com/package/@vtex-mcp/message-center-api)                       | Transactional messages                        |
+| Orders                    | [`@vtex-mcp/orders-api`](https://www.npmjs.com/package/@vtex-mcp/orders-api)                                       | Order management                              |
+| Payment Provider          | [`@vtex-mcp/payment-provider-protocol`](https://www.npmjs.com/package/@vtex-mcp/payment-provider-protocol)         | Payment provider integration                  |
+| Payments                  | [`@vtex-mcp/payments-api`](https://www.npmjs.com/package/@vtex-mcp/payments-api)                                   | Payment transactions                          |
+| Payments Gateway          | [`@vtex-mcp/payments-gateway-api`](https://www.npmjs.com/package/@vtex-mcp/payments-gateway-api)                   | Payment gateway                               |
+| Pickup Points             | [`@vtex-mcp/pickup-points-api`](https://www.npmjs.com/package/@vtex-mcp/pickup-points-api)                         | Pickup point management                       |
+| Policies System           | [`@vtex-mcp/policies-system-api`](https://www.npmjs.com/package/@vtex-mcp/policies-system-api)                     | Policy management                             |
+| Pricing                   | [`@vtex-mcp/pricing-api`](https://www.npmjs.com/package/@vtex-mcp/pricing-api)                                     | Price management                              |
+| Promotions & Taxes        | [`@vtex-mcp/promotions-and-taxes-api`](https://www.npmjs.com/package/@vtex-mcp/promotions-and-taxes-api)           | Promotions and tax rules                      |
+| Rates and Benefits        | [`@vtex-mcp/rates-and-benefits-api`](https://www.npmjs.com/package/@vtex-mcp/rates-and-benefits-api)               | Rates and benefits                            |
+| Returns                   | [`@vtex-mcp/returns-api`](https://www.npmjs.com/package/@vtex-mcp/returns-api)                                     | Return invoices and order return info         |
+| Reviews and Ratings       | [`@vtex-mcp/reviews-and-ratings-api`](https://www.npmjs.com/package/@vtex-mcp/reviews-and-ratings-api)             | Product reviews                               |
+| Search                    | [`@vtex-mcp/search-api`](https://www.npmjs.com/package/@vtex-mcp/search-api)                                       | VTEX Intelligent Search                       |
+| Session Manager           | [`@vtex-mcp/session-manager-api`](https://www.npmjs.com/package/@vtex-mcp/session-manager-api)                     | Session management                            |
+| Shipping Network          | [`@vtex-mcp/shipping-network-api`](https://www.npmjs.com/package/@vtex-mcp/shipping-network-api)                   | Shipping carriers                             |
+| SKU Bindings              | [`@vtex-mcp/sku-bindings-api`](https://www.npmjs.com/package/@vtex-mcp/sku-bindings-api)                           | SKU binding management                        |
+| Specification             | [`@vtex-mcp/specification-api`](https://www.npmjs.com/package/@vtex-mcp/specification-api)                         | Product specifications                        |
+| Subscriptions             | [`@vtex-mcp/subscriptions-api`](https://www.npmjs.com/package/@vtex-mcp/subscriptions-api)                         | Subscription management                       |
+| Suggestions               | [`@vtex-mcp/suggestions-api`](https://www.npmjs.com/package/@vtex-mcp/suggestions-api)                             | Marketplace suggestions                       |
+| Tax Service Provider      | [`@vtex-mcp/tax-service-provider-protocol`](https://www.npmjs.com/package/@vtex-mcp/tax-service-provider-protocol) | Tax service provider protocol                 |
+| Tracking                  | [`@vtex-mcp/tracking-api`](https://www.npmjs.com/package/@vtex-mcp/tracking-api)                                   | Order tracking                                |
+| VTEX DO                   | [`@vtex-mcp/vtex-do-api`](https://www.npmjs.com/package/@vtex-mcp/vtex-do-api)                                     | Task management                               |
+| VTEX ID                   | [`@vtex-mcp/vtex-id-api`](https://www.npmjs.com/package/@vtex-mcp/vtex-id-api)                                     | Authentication and identity                   |
+| Warehouse                 | [`@vtex-mcp/warehouse-api`](https://www.npmjs.com/package/@vtex-mcp/warehouse-api)                                 | Warehouse management                          |
 
 </details>
 
@@ -376,11 +376,11 @@ pnpm test          # Run all 161 tests across all packages
 pnpm test --watch  # Watch mode for development
 ```
 
-| Package | Tests | Coverage |
-|---|---|---|
-| `@vtex-mcp/shared` | 67 (8 unit + property test files) | Config, HTTP client, errors, validation, server factory |
-| `@vtex-mcp/generator` | 80 (6 unit + property test files) | Parser, schema converter, tool generator, package generator |
-| `@vtex-mcp/catalog-api` | 14 (integration tests) | JSON-RPC conformance, tools/list, error propagation, pagination |
+| Package                 | Tests                             | Coverage                                                        |
+| ----------------------- | --------------------------------- | --------------------------------------------------------------- |
+| `@vtex-mcp/shared`      | 67 (8 unit + property test files) | Config, HTTP client, errors, validation, server factory         |
+| `@vtex-mcp/generator`   | 80 (6 unit + property test files) | Parser, schema converter, tool generator, package generator     |
+| `@vtex-mcp/catalog-api` | 14 (integration tests)            | JSON-RPC conformance, tools/list, error propagation, pagination |
 
 ---
 
