@@ -16,7 +16,7 @@ Thanks for considering a contribution. This guide covers everything you need to 
 ## Getting Started
 
 ```bash
-git clone https://github.com/your-org/vtex-mcp-servers.git
+git clone https://github.com/v-hansen/vtex_mcps.git
 cd vtex-mcp-servers
 pnpm install
 pnpm build

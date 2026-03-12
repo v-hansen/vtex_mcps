@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
-- Initial release with 41 MCP servers covering all public VTEX APIs
+- Initial release with 43 MCP servers covering all public VTEX APIs
 - 1,669 tools generated from official VTEX OpenAPI specifications
 - Shared library (`@vtex-mcp/shared`) with:
   - Environment-based configuration loading
@@ -29,4 +29,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### API Groups Covered
 
-Antifraud Provider, Brand, Catalog, Category, Checkout, CMS (Legacy), Collection (Beta), Customer Credit, Gift Card, Gift Card Hub, Gift Card Provider Protocol, Headless CMS, Intelligent Search Events, Inventory, License Manager, Logistics, Marketplace, Master Data v2, Master Data v10, Message Center, Orders, Payment Provider Protocol, Payments, Payments Gateway, Pickup Points, Policies System, Pricing, Promotions & Taxes, Rates and Benefits, Reviews and Ratings, Search, Session Manager, Shipping Network, SKU Bindings, Specification, Subscriptions, Suggestions, Tracking, VTEX DO, VTEX ID, Warehouse.
+Antifraud Provider, Brand, Catalog, Category, Checkout, CMS (Legacy), Collection (Beta), Customer Credit, Gift Card, Gift Card Hub, Gift Card Provider Protocol, Headless CMS, Intelligent Search Events, Inventory, License Manager, Logistics, Marketplace, Master Data v2, Master Data v10, Message Center, Orders, Payment Provider Protocol, Payments, Payments Gateway, Pickup Points, Policies System, Pricing, Promotions & Taxes, Rates and Benefits, Returns, Reviews and Ratings, Search, Session Manager, Shipping Network, SKU Bindings, Specification, Subscriptions, Suggestions, Tax Service Provider Protocol, Tracking, VTEX DO, VTEX ID, Warehouse.
