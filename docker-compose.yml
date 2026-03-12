@@ -187,26 +187,26 @@ services:
     ports: ["3022:3000"]
     env_file: .env
 
-  gift-card-api:
+  giftcard-api:
     build:
       context: .
-      dockerfile: servers/gift-card-api/Dockerfile
+      dockerfile: servers/giftcard-api/Dockerfile
     command: ["--transport", "http", "--port", "3000"]
     ports: ["3023:3000"]
     env_file: .env
 
-  gift-card-hub-api:
+  giftcard-hub-api:
     build:
       context: .
-      dockerfile: servers/gift-card-hub-api/Dockerfile
+      dockerfile: servers/giftcard-hub-api/Dockerfile
     command: ["--transport", "http", "--port", "3000"]
     ports: ["3024:3000"]
     env_file: .env
 
-  gift-card-provider-protocol:
+  giftcard-provider-protocol:
     build:
       context: .
-      dockerfile: servers/gift-card-provider-protocol/Dockerfile
+      dockerfile: servers/giftcard-provider-protocol/Dockerfile
     command: ["--transport", "http", "--port", "3000"]
     ports: ["3025:3000"]
     env_file: .env
