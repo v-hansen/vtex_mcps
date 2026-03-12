@@ -3,13 +3,13 @@
   <img src="https://img.shields.io/badge/VTEX-APIs-E31C58?style=flat-square" alt="VTEX APIs" />
   <img src="https://img.shields.io/badge/TypeScript-strict-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript" />
   <img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" alt="MIT License" />
-  <img src="https://img.shields.io/badge/servers-41-orange?style=flat-square" alt="41 Servers" />
+  <img src="https://img.shields.io/badge/servers-43-orange?style=flat-square" alt="43 Servers" />
   <img src="https://img.shields.io/badge/tools-1,669-purple?style=flat-square" alt="1,669 Tools" />
 </p>
 
 # VTEX MCP Servers
 
-**41 standalone [Model Context Protocol](https://modelcontextprotocol.io/) servers exposing every public VTEX e-commerce API to AI assistants.**
+**43 standalone [Model Context Protocol](https://modelcontextprotocol.io/) servers exposing every public VTEX e-commerce API to AI assistants.**
 
 Each VTEX API group is its own MCP server — install only what you need via `npx`, configure your credentials, and let Claude, Cursor, Kiro, or any MCP-compatible client interact with your VTEX store.
 
@@ -203,7 +203,7 @@ npx @vtex-mcp/orders-api --transport http --port 8080
 ## Available Servers
 
 <details>
-<summary><strong>41 servers — click to expand full list</strong></summary>
+<summary><strong>43 servers — click to expand full list</strong></summary>
 
 | Server | Package | Tools |
 |---|---|---|
@@ -236,6 +236,7 @@ npx @vtex-mcp/orders-api --transport http --port 8080
 | Pricing | [`@vtex-mcp/pricing-api`](https://www.npmjs.com/package/@vtex-mcp/pricing-api) | Price management |
 | Promotions & Taxes | [`@vtex-mcp/promotions-and-taxes-api`](https://www.npmjs.com/package/@vtex-mcp/promotions-and-taxes-api) | Promotions and tax rules |
 | Rates and Benefits | [`@vtex-mcp/rates-and-benefits-api`](https://www.npmjs.com/package/@vtex-mcp/rates-and-benefits-api) | Rates and benefits |
+| Returns | [`@vtex-mcp/returns-api`](https://www.npmjs.com/package/@vtex-mcp/returns-api) | Return invoices and order return info |
 | Reviews and Ratings | [`@vtex-mcp/reviews-and-ratings-api`](https://www.npmjs.com/package/@vtex-mcp/reviews-and-ratings-api) | Product reviews |
 | Search | [`@vtex-mcp/search-api`](https://www.npmjs.com/package/@vtex-mcp/search-api) | VTEX Intelligent Search |
 | Session Manager | [`@vtex-mcp/session-manager-api`](https://www.npmjs.com/package/@vtex-mcp/session-manager-api) | Session management |
@@ -244,6 +245,7 @@ npx @vtex-mcp/orders-api --transport http --port 8080
 | Specification | [`@vtex-mcp/specification-api`](https://www.npmjs.com/package/@vtex-mcp/specification-api) | Product specifications |
 | Subscriptions | [`@vtex-mcp/subscriptions-api`](https://www.npmjs.com/package/@vtex-mcp/subscriptions-api) | Subscription management |
 | Suggestions | [`@vtex-mcp/suggestions-api`](https://www.npmjs.com/package/@vtex-mcp/suggestions-api) | Marketplace suggestions |
+| Tax Service Provider | [`@vtex-mcp/tax-service-provider-protocol`](https://www.npmjs.com/package/@vtex-mcp/tax-service-provider-protocol) | Tax service provider protocol |
 | Tracking | [`@vtex-mcp/tracking-api`](https://www.npmjs.com/package/@vtex-mcp/tracking-api) | Order tracking |
 | VTEX DO | [`@vtex-mcp/vtex-do-api`](https://www.npmjs.com/package/@vtex-mcp/vtex-do-api) | Task management |
 | VTEX ID | [`@vtex-mcp/vtex-id-api`](https://www.npmjs.com/package/@vtex-mcp/vtex-id-api) | Authentication and identity |
@@ -265,7 +267,7 @@ graph TB
         SPECS["OpenAPI Specs<br/><code>specs/*.json</code>"]
     end
 
-    subgraph "41 Generated MCP Servers"
+    subgraph "43 Generated MCP Servers"
         S1["catalog-api"]
         S2["orders-api"]
         S3["checkout-api"]
@@ -308,13 +310,13 @@ vtex-mcp-servers/
 ├── packages/
 │   ├── shared/              # HTTP client, auth, validation, error handling, MCP server factory
 │   └── generator/           # OpenAPI spec → MCP server code generator
-├── servers/                 # 41 generated MCP server packages
+├── servers/                 # 43 generated MCP server packages
 ├── specs/                   # VTEX OpenAPI specification files
 ├── .github/
 │   ├── workflows/           # CI (build + test) and publish (npm) workflows
 │   ├── ISSUE_TEMPLATE/      # Bug report and feature request templates
 │   └── PULL_REQUEST_TEMPLATE.md
-├── docker-compose.yml       # Run all 41 servers locally
+├── docker-compose.yml       # Run all 43 servers locally
 ├── package.json             # Root workspace config
 ├── pnpm-workspace.yaml      # Workspace package globs
 └── tsconfig.base.json       # Shared TypeScript config
