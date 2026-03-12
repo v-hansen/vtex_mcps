@@ -226,7 +226,7 @@ importers:
         specifier: ^5.7.3
         version: 5.9.3
 
-  servers/gift-card-api:
+  servers/giftcard-api:
     dependencies:
       '@vtex-mcp/shared':
         specifier: workspace:*
@@ -245,7 +245,7 @@ importers:
         specifier: ^5.7.3
         version: 5.9.3
 
-  servers/gift-card-hub-api:
+  servers/giftcard-hub-api:
     dependencies:
       '@vtex-mcp/shared':
         specifier: workspace:*
@@ -264,7 +264,7 @@ importers:
         specifier: ^5.7.3
         version: 5.9.3
 
-  servers/gift-card-provider-protocol:
+  servers/giftcard-provider-protocol:
     dependencies:
       '@vtex-mcp/shared':
         specifier: workspace:*
