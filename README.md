@@ -41,21 +41,21 @@ VTEX has 40+ API groups with hundreds of endpoints. Manually wiring them into an
 
 This project solves that:
 
-- **One command** to run any VTEX API as an MCP server  
-- **1,669 tools** across catalog, orders, checkout, payments, logistics, and more  
-- **Zero handwritten boilerplate** — everything generated from OpenAPI  
-- Built-in validation + structured responses  
+- **One command** to run any VTEX API as an MCP server
+- **1,669 tools** across catalog, orders, checkout, payments, logistics, and more
+- **Zero handwritten boilerplate** — everything generated from OpenAPI
+- Built-in validation + structured responses
 - Credential sanitization (keys never leak in logs)
 
 ---
 
 ## Example Use Cases
 
-- Automate catalog operations via prompts  
-- Bulk update products and prices  
-- Build internal AI tooling for ops teams  
-- QA automation for VTEX stores  
-- AI-driven workflows and integrations  
+- Automate catalog operations via prompts
+- Bulk update products and prices
+- Build internal AI tooling for ops teams
+- QA automation for VTEX stores
+- AI-driven workflows and integrations
 
 ---
 
