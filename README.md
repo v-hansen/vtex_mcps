@@ -5,6 +5,8 @@
   <img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" alt="MIT License" />
   <img src="https://img.shields.io/badge/servers-43-orange?style=flat-square" alt="43 Servers" />
   <img src="https://img.shields.io/badge/tools-1,669-purple?style=flat-square" alt="1,669 Tools" />
+  <img src="https://img.shields.io/npm/v/@vtex-mcp/catalog-api?style=flat-square" />
+  <img src="https://img.shields.io/npm/dw/@vtex-mcp/catalog-api?style=flat-square" />
 </p>
 
 # VTEX MCP Servers
