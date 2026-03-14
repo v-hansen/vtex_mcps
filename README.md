@@ -9,22 +9,51 @@
 
 # VTEX MCP Servers
 
-**43 standalone [Model Context Protocol](https://modelcontextprotocol.io/) servers exposing every public VTEX e-commerce API to AI assistants.**
+**Run the entire VTEX platform through AI.**
 
-Each VTEX API group is its own MCP server — install only what you need via `npx`, configure your credentials, and let Claude, Cursor, Kiro, or any MCP-compatible client interact with your VTEX store.
+👉 43 standalone [Model Context Protocol](https://modelcontextprotocol.io/) servers exposing every public VTEX e-commerce API to AI assistants.
 
-All servers are auto-generated from official [VTEX OpenAPI specifications](https://github.com/vtex/openapi-schemas), ensuring tools stay accurate and in sync with the platform.
+---
+
+## ⚡ Quickest way
+
+```bash
+npx @vtex-mcp/catalog-api
+```
+
+Set credentials → connect Claude / Cursor / Kiro → done.
+
+---
+
+## What is this?
+
+Each VTEX API group is its own MCP server — install only what you need via `npx`, configure credentials, and let any MCP-compatible AI client interact directly with your VTEX store.
+
+All servers are auto-generated from official [VTEX OpenAPI specifications](https://github.com/vtex/openapi-schemas), ensuring tools stay accurate and always in sync with the platform.
 
 ---
 
 ## Why?
 
-VTEX has 40+ API groups with hundreds of endpoints. Manually wiring each one into an AI assistant is tedious and error-prone. This project solves that:
+VTEX has 40+ API groups with hundreds of endpoints. Manually wiring them into an AI assistant is tedious, fragile, and hard to maintain.
 
-- **One command** to run any VTEX API as an MCP server
-- **1,669 tools** covering catalog, orders, checkout, payments, logistics, and more
-- **Zero hand-written boilerplate** — a code generator reads OpenAPI specs and produces fully typed, validated MCP servers
-- **Credential sanitization** built in — API keys never leak through error messages
+This project solves that:
+
+- **One command** to run any VTEX API as an MCP server  
+- **1,669 tools** across catalog, orders, checkout, payments, logistics, and more  
+- **Zero handwritten boilerplate** — everything generated from OpenAPI  
+- Built-in validation + structured responses  
+- Credential sanitization (keys never leak in logs)
+
+---
+
+## Example Use Cases
+
+- Automate catalog operations via prompts  
+- Bulk update products and prices  
+- Build internal AI tooling for ops teams  
+- QA automation for VTEX stores  
+- AI-driven workflows and integrations  
 
 ---
 
@@ -46,7 +75,7 @@ export VTEX_APP_TOKEN=your-app-token
 
 ### 3. Connect your AI client
 
-**Claude Desktop** — add to `claude_desktop_config.json`:
+**Claude Desktop**
 
 ```json
 {
@@ -64,7 +93,7 @@ export VTEX_APP_TOKEN=your-app-token
 }
 ```
 
-**Cursor** — add to `.cursor/mcp.json`:
+**Cursor**
 
 ```json
 {
@@ -82,7 +111,7 @@ export VTEX_APP_TOKEN=your-app-token
 }
 ```
 
-**Kiro** — add to `.kiro/settings/mcp.json`:
+**Kiro**
 
 ```json
 {
