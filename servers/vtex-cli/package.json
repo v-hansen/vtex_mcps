@@ -1,0 +1,32 @@
+{
+  "name": "@vtex-mcp/vtex-cli",
+  "version": "1.0.0",
+  "description": "MCP server for VTEX CLI (toolbelt) commands",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "vtex-mcp-vtex-cli": "dist/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest --run",
+    "start": "node dist/cli.js",
+    "start:http": "node dist/cli.js --transport http"
+  },
+  "dependencies": {
+    "@vtex-mcp/shared": "workspace:*",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "@types/node": "^22.10.5",
+    "fast-check": "^4.0.0",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.4"
+  },
+  "license": "MIT"
+}
